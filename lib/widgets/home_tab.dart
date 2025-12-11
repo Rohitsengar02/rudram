@@ -1,0 +1,113 @@
+import 'package:flutter/material.dart';
+import 'custom_app_bar.dart';
+import 'search_bar_widget.dart';
+import 'hero_banner.dart';
+import 'category_section.dart';
+import 'flash_sale_section.dart';
+import 'new_arrivals_section.dart';
+import 'best_sellers_section.dart';
+import 'trending_now_section.dart';
+import 'exclusive_offers_banner.dart';
+import 'perfect_match_section.dart';
+import 'deals_of_the_day_section.dart';
+import 'luxury_section.dart';
+import 'shop_by_occasion_section.dart';
+import 'our_features_section.dart';
+import 'watch_and_shop_section.dart';
+import 'blog_section.dart';
+import 'insta_family_section.dart';
+import 'all_products_section.dart';
+import 'celebrity_style_section.dart';
+import 'gift_guide_section.dart';
+import 'testimonials_section.dart';
+import 'temple_jewellery_section.dart';
+import 'gold_scheme_section.dart';
+import 'designers_spotlight.dart';
+import 'newsletter_section.dart';
+import 'brand_marquee_section.dart';
+import 'community_gallery_section.dart';
+import 'faq_section.dart';
+import 'awards_section.dart';
+import 'footer_section.dart';
+
+class HomeTab extends StatelessWidget {
+  const HomeTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        children: [
+          const CustomAppBar(),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SearchBarWidget(),
+                  const SizedBox(height: 6),
+                  const HeroBanner(),
+                  const SizedBox(height: 8),
+                  const CategorySection(),
+                  const SizedBox(height: 4),
+                  FlashSaleSection(),
+                  const SizedBox(height: 0),
+                  NewArrivalsSection(),
+                  const SizedBox(height: 0),
+                  BestSellersSection(),
+                  const SizedBox(height: 0),
+                  TrendingNowSection(),
+                  const SizedBox(height: 0),
+                  const ExclusiveOffersBanner(),
+                  const SizedBox(height: 4),
+                  const ShopByOccasionSection(),
+                  const DealsOfTheDaySection(),
+                  const SizedBox(height: 0),
+                  const PerfectMatchSection(),
+                  const SizedBox(height: 4),
+                  const DealsOfTheDaySection(),
+                  const SizedBox(height: 0),
+                  const LuxurySection(),
+                  const SizedBox(height: 8),
+                  const WatchAndShopSection(),
+                  const SizedBox(height: 8),
+                  const BlogSection(),
+                  const SizedBox(height: 8),
+                  const InstaFamilySection(),
+                  const SizedBox(height: 8),
+                  AllProductsSection(),
+                  const SizedBox(height: 8),
+                  const OurFeaturesSection(),
+                  const SizedBox(height: 8),
+                  TempleJewellerySection(),
+                  const SizedBox(height: 8),
+                  const CelebrityStyleSection(),
+                  const SizedBox(height: 8),
+                  const GoldSchemeSection(),
+                  const SizedBox(height: 8),
+                  const DesignersSpotlight(),
+                  const SizedBox(height: 8),
+                  const GiftGuideSection(),
+                  const SizedBox(height: 8),
+                  const TestimonialsSection(),
+                  const SizedBox(height: 12),
+                  const NewsletterSection(),
+                  const SizedBox(height: 12),
+                  const BrandMarqueeSection(),
+                  const SizedBox(height: 8),
+                  const CommunityGallerySection(),
+                  const SizedBox(height: 8),
+                  const FaqSection(),
+                  const SizedBox(height: 8),
+                  const AwardsSection(),
+                  const FooterSection(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

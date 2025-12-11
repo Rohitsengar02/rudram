@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+import '../models/data_models.dart';
+import '../utils/app_colors.dart';
+import 'product_card.dart';
+
+class TrendingNowSection extends StatelessWidget {
+  TrendingNowSection({super.key});
+
+  final List<ProductItem> products = [
+    ProductItem(
+      title: "Layered Gold Chain",
+      currentPrice: 78000,
+      oldPrice: 95000,
+      discount: "18% Off",
+      image:
+          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500",
+      bgColor: const Color(0xFFFFD700),
+    ),
+    ProductItem(
+      title: "Statement Earrings",
+      currentPrice: 45000,
+      oldPrice: 55000,
+      discount: "18% Off",
+      image:
+          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500",
+      bgColor: const Color(0xFFFF69B4),
+    ),
+    ProductItem(
+      title: "Charm Bracelet",
+      currentPrice: 35000,
+      oldPrice: 42000,
+      discount: "17% Off",
+      image:
+          "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500",
+      bgColor: const Color(0xFF87CEEB),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            children: [
+              Icon(Icons.trending_up, color: AppColors.primaryOrange, size: 22),
+              const SizedBox(width: 8),
+              const Text(
+                "Trending Now",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  "See all",
+                  style: TextStyle(
+                    color: AppColors.primaryOrange,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 270,
+          child: ListView.builder(
+            padding: const EdgeInsets.only(left: 16),
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return ProductCard(product: products[index]);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
