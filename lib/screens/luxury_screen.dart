@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import '../utils/app_colors.dart';
 import 'luxury_home_content.dart';
 import 'luxury_shop_screen.dart';
 import 'luxury_concierge_screen.dart';

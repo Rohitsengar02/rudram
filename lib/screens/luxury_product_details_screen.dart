@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class LuxuryProductDetailsScreen extends StatefulWidget {
   final int index;
@@ -24,6 +25,7 @@ class _LuxuryProductDetailsScreenState
     return Scaffold(
       backgroundColor: Colors.black,
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             backgroundColor: Colors.black,
@@ -56,127 +58,138 @@ class _LuxuryProductDetailsScreenState
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      _images.length,
-                      (index) => Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _currentImageIndex == index
-                              ? const Color(0xFFD4AF37)
-                              : Colors.grey[800],
+              child: AnimationLimiter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(
+                      milliseconds: 600,
+                    ), // Slower for luxury feel
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(child: widget),
+                    ),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          _images.length,
+                          (index) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _currentImageIndex == index
+                                  ? const Color(0xFFD4AF37)
+                                  : Colors.grey[800],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
+                      const SizedBox(height: 32),
 
-                  const Text(
-                    "The Royal Emerald Necklace",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Playfair Display',
-                      fontSize: 32,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "₹ 45,00,000",
-                    style: TextStyle(
-                      color: Color(0xFFD4AF37),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Includes Taxes",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-
-                  const SizedBox(height: 32),
-                  const Divider(color: Colors.grey, thickness: 0.2),
-                  const SizedBox(height: 32),
-
-                  const Text(
-                    "STORY",
-                    style: TextStyle(
-                      color: Color(0xFFD4AF37),
-                      letterSpacing: 2,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "This exquisite piece is handcrafted by master artisans in Jaipur, featuring 240 carats of Colombian emeralds and uncut Polki diamonds set in 22K Hallmarked Gold. A true heirloom piece designed for royalty.",
-                    style: TextStyle(
-                      color: Colors.grey[300],
-                      height: 1.6,
-                      fontSize: 16,
-                      fontFamily: 'Playfair Display',
-                    ),
-                  ),
-
-                  const SizedBox(height: 48),
-
-                  // Specs
-                  _buildSpecRow("Gemstone", "Colombian Emerald"),
-                  _buildSpecRow("Metal", "22K Gold"),
-                  _buildSpecRow("Weight", "185 Grams"),
-                  _buildSpecRow("Certification", "GIA & BIS Hallmarked"),
-
-                  const SizedBox(height: 48),
-
-                  // Concierge CTA
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFFD4AF37)),
-                    ),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.support_agent,
+                      const Text(
+                        "The Royal Emerald Necklace",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Playfair Display',
+                          fontSize: 32,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        "₹ 45,00,000",
+                        style: TextStyle(
                           color: Color(0xFFD4AF37),
-                          size: 32,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "Private Viewing",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontFamily: 'Playfair Display',
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          "Book an appointment to view this piece at our flagship boutique or request a home visit.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        const SizedBox(height: 24),
-                        OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.white),
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text("CONTACT CONCIERGE"),
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        "Includes Taxes",
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
 
-                  const SizedBox(height: 100), // Space for bottom bar
-                ],
+                      const SizedBox(height: 32),
+                      const Divider(color: Colors.grey, thickness: 0.2),
+                      const SizedBox(height: 32),
+
+                      const Text(
+                        "STORY",
+                        style: TextStyle(
+                          color: Color(0xFFD4AF37),
+                          letterSpacing: 2,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "This exquisite piece is handcrafted by master artisans in Jaipur, featuring 240 carats of Colombian emeralds and uncut Polki diamonds set in 22K Hallmarked Gold. A true heirloom piece designed for royalty.",
+                        style: TextStyle(
+                          color: Colors.grey[300],
+                          height: 1.6,
+                          fontSize: 16,
+                          fontFamily: 'Playfair Display',
+                        ),
+                      ),
+
+                      const SizedBox(height: 48),
+
+                      // Specs
+                      _buildSpecRow("Gemstone", "Colombian Emerald"),
+                      _buildSpecRow("Metal", "22K Gold"),
+                      _buildSpecRow("Weight", "185 Grams"),
+                      _buildSpecRow("Certification", "GIA & BIS Hallmarked"),
+
+                      const SizedBox(height: 48),
+
+                      // Concierge CTA
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFFD4AF37)),
+                        ),
+                        child: Column(
+                          children: [
+                            const Icon(
+                              Icons.support_agent,
+                              color: Color(0xFFD4AF37),
+                              size: 32,
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              "Private Viewing",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontFamily: 'Playfair Display',
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              "Book an appointment to view this piece at our flagship boutique or request a home visit.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            const SizedBox(height: 24),
+                            OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: Colors.white),
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text("CONTACT CONCIERGE"),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 100), // Space for bottom bar
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

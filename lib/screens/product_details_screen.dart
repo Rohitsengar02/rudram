@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../utils/app_colors.dart';
 import '../models/data_models.dart';
 import '../widgets/product_card.dart';
@@ -254,700 +255,741 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     ),
                   ],
                 ),
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 120),
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(2),
-                        ),
+                child: AnimationLimiter(
+                  child: ListView(
+                    controller: scrollController,
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 120),
+                    cacheExtent: 1000,
+                    children: AnimationConfiguration.toStaggeredList(
+                      duration: const Duration(milliseconds: 375),
+                      childAnimationBuilder: (widget) => SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(child: widget),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Gallery Thumbnails
-                    SizedBox(
-                      height: 70,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _images.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () =>
-                              setState(() => _currentImageIndex = index),
-                          child: Container(
-                            width: 70,
-                            margin: const EdgeInsets.only(right: 12),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: _currentImageIndex == index
-                                    ? AppColors.primaryOrange
-                                    : Colors.transparent,
-                                width: 2,
-                              ),
-                              image: DecorationImage(
-                                image: NetworkImage(_images[index]),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Header Info
-                    Text(
-                      widget.product.title,
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Playfair Display',
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
                       children: [
-                        Text(
-                          "₹${widget.product.currentPrice}",
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryOrange,
+                        Center(
+                          child: Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(2),
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          "₹${widget.product.oldPrice}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            decoration: TextDecoration.lineThrough,
-                            color: Colors.grey[400],
-                          ),
-                        ),
-                        const Spacer(),
-                        const Icon(Icons.star, color: Colors.amber, size: 20),
-                        const SizedBox(width: 4),
-                        const Text(
-                          "4.8",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          "(120 Reviews)",
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
+                        const SizedBox(height: 20),
 
-                    // Sizes
-                    const Text(
-                      "Select Size",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(
-                          _sizes.length,
-                          (index) => GestureDetector(
-                            onTap: () =>
-                                setState(() => _selectedSizeIndex = index),
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 12),
-                              width: 50,
-                              height: 50,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: _selectedSizeIndex == index
-                                    ? Colors.black
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: _selectedSizeIndex == index
-                                      ? Colors.black
-                                      : Colors.grey[300]!,
-                                ),
-                                boxShadow: _selectedSizeIndex == index
-                                    ? [
-                                        const BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 4,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ]
-                                    : null,
-                              ),
-                              child: Text(
-                                _sizes[index],
-                                style: TextStyle(
-                                  color: _selectedSizeIndex == index
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.bold,
+                        // Gallery Thumbnails
+                        SizedBox(
+                          height: 70,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: _images.length,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () =>
+                                  setState(() => _currentImageIndex = index),
+                              child: Container(
+                                width: 70,
+                                margin: const EdgeInsets.only(right: 12),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: _currentImageIndex == index
+                                        ? AppColors.primaryOrange
+                                        : Colors.transparent,
+                                    width: 2,
+                                  ),
+                                  image: DecorationImage(
+                                    image: NetworkImage(_images[index]),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      "Handcrafted with 22K Gold, this piece is a testament to timeless elegance. Each curve is designed to reflect light perfectly.",
-                      style: TextStyle(color: Colors.grey, height: 1.5),
-                    ),
-                    const SizedBox(height: 32),
+                        const SizedBox(height: 24),
 
-                    // Enhanced Tabs Section
-                    Container(
-                      padding: const EdgeInsets.all(6), // Added padding to bg
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: TabBar(
-                        controller: _tabController,
-                        physics: const ClampingScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        indicator: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.08),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
+                        // Header Info
+                        Text(
+                          widget.product.title,
+                          style: const TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Playfair Display',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text(
+                              "₹${widget.product.currentPrice}",
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryOrange,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              "₹${widget.product.oldPrice}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                decoration: TextDecoration.lineThrough,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                            const Spacer(),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 4),
+                            const Text(
+                              "4.8",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              "(120 Reviews)",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ),
-                        labelColor: AppColors.textDark,
-                        unselectedLabelColor: Colors.grey[600],
-                        labelStyle: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                        ),
-                        unselectedLabelStyle: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                        dividerColor: Colors.transparent,
-                        tabs: const [
-                          Tab(text: "Features", height: 40),
-                          Tab(text: "Reviews", height: 40),
-                          Tab(text: "Seller", height: 40),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
-                    // Tab Content
-                    SizedBox(
-                      height: 220, // Increased height for better content
-                      child: TabBarView(
-                        controller: _tabController,
-                        physics: const BouncingScrollPhysics(),
-                        children: [
-                          // Beautiful Features Grid
-                          GridView.count(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 2.5,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              _buildFeatureCard(
-                                Icons.diamond_outlined,
-                                "Material",
-                                "22K Gold",
+                        // Sizes
+                        const Text(
+                          "Select Size",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          child: Row(
+                            children: List.generate(
+                              _sizes.length,
+                              (index) => GestureDetector(
+                                onTap: () =>
+                                    setState(() => _selectedSizeIndex = index),
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 12),
+                                  width: 50,
+                                  height: 50,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: _selectedSizeIndex == index
+                                        ? Colors.black
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: _selectedSizeIndex == index
+                                          ? Colors.black
+                                          : Colors.grey[300]!,
+                                    ),
+                                    boxShadow: _selectedSizeIndex == index
+                                        ? [
+                                            const BoxShadow(
+                                              color: Colors.black26,
+                                              blurRadius: 4,
+                                              offset: Offset(0, 2),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Text(
+                                    _sizes[index],
+                                    style: TextStyle(
+                                      color: _selectedSizeIndex == index
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              _buildFeatureCard(
-                                Icons.scale_outlined,
-                                "Weight",
-                                "35 Grams",
-                              ),
-                              _buildFeatureCard(
-                                Icons.verified_outlined,
-                                "Certified",
-                                "BIS Hallmarked",
-                              ),
-                              _buildFeatureCard(
-                                Icons.handshake_outlined,
-                                "Warranty",
-                                "1 Year",
-                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const Text(
+                          "Handcrafted with 22K Gold, this piece is a testament to timeless elegance. Each curve is designed to reflect light perfectly.",
+                          style: TextStyle(color: Colors.grey, height: 1.5),
+                        ),
+                        const SizedBox(height: 32),
+
+                        // Enhanced Tabs Section
+                        Container(
+                          padding: const EdgeInsets.all(
+                            6,
+                          ), // Added padding to bg
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: TabBar(
+                            controller: _tabController,
+                            physics: const BouncingScrollPhysics(),
+                            padding: EdgeInsets.zero,
+                            indicator: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.08),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            labelColor: AppColors.textDark,
+                            unselectedLabelColor: Colors.grey[600],
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                            unselectedLabelStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                            dividerColor: Colors.transparent,
+                            tabs: const [
+                              Tab(text: "Features", height: 40),
+                              Tab(text: "Reviews", height: 40),
+                              Tab(text: "Seller", height: 40),
                             ],
                           ),
+                        ),
+                        const SizedBox(height: 24),
 
-                          // Beautiful Reviews
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Container(
+                        // Tab Content
+                        SizedBox(
+                          height: 220, // Increased height for better content
+                          child: TabBarView(
+                            controller: _tabController,
+                            physics: const BouncingScrollPhysics(),
+                            children: [
+                              // Beautiful Features Grid
+                              GridView.count(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: 2.5,
+                                physics: const BouncingScrollPhysics(),
+                                children: [
+                                  _buildFeatureCard(
+                                    Icons.diamond_outlined,
+                                    "Material",
+                                    "22K Gold",
+                                  ),
+                                  _buildFeatureCard(
+                                    Icons.scale_outlined,
+                                    "Weight",
+                                    "35 Grams",
+                                  ),
+                                  _buildFeatureCard(
+                                    Icons.verified_outlined,
+                                    "Certified",
+                                    "BIS Hallmarked",
+                                  ),
+                                  _buildFeatureCard(
+                                    Icons.handshake_outlined,
+                                    "Warranty",
+                                    "1 Year",
+                                  ),
+                                ],
+                              ),
+
+                              // Beautiful Reviews
+                              SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber[50],
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            "4.8",
+                                            style: TextStyle(
+                                              fontSize: 32,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.amber,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  "Excellent",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "Based on 120 verified reviews",
+                                                  style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: _showAddReviewModal,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              foregroundColor: Colors.black,
+                                              elevation: 0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                side: BorderSide(
+                                                  color: Colors.grey[300]!,
+                                                ),
+                                              ),
+                                            ),
+                                            child: const Text("Write Review"),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    _buildReviewItem(
+                                      "Ananya P.",
+                                      "Absolutely loved the finish! Looks exactly like the photos.",
+                                      5,
+                                    ),
+                                    _buildReviewItem(
+                                      "Rahul K.",
+                                      "Great packaging and timely delivery.",
+                                      4,
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Beautiful Seller Info
+                              SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
-                                    color: Colors.amber[50],
+                                    border: Border.all(
+                                      color: Colors.grey[200]!,
+                                    ),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Text(
-                                        "4.8",
-                                        style: TextStyle(
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.amber,
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primaryOrange,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            "R",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      const SizedBox(width: 12),
+                                      const SizedBox(width: 16),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            const Text(
-                                              "Excellent",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
+                                            const Row(
+                                              children: [
+                                                Text(
+                                                  "Rudram Official",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4),
+                                                Icon(
+                                                  Icons.verified,
+                                                  size: 16,
+                                                  color: Colors.blue,
+                                                ),
+                                              ],
                                             ),
                                             Text(
-                                              "Based on 120 verified reviews",
+                                              "Member since 2015",
                                               style: TextStyle(
-                                                color: Colors.grey[600],
+                                                color: Colors.grey[500],
                                                 fontSize: 12,
                                               ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            const Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.star,
+                                                  size: 14,
+                                                  color: Colors.amber,
+                                                ),
+                                                Text(
+                                                  " 4.9 Seller Rating",
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
                                       ),
-                                      ElevatedButton(
-                                        onPressed: _showAddReviewModal,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white,
-                                          foregroundColor: Colors.black,
-                                          elevation: 0,
+                                      OutlinedButton(
+                                        onPressed: () {},
+                                        style: OutlinedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
                                               8,
                                             ),
-                                            side: BorderSide(
-                                              color: Colors.grey[300]!,
-                                            ),
                                           ),
                                         ),
-                                        child: const Text("Write Review"),
+                                        child: const Text("Visit"),
                                       ),
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 16),
-                                _buildReviewItem(
-                                  "Ananya P.",
-                                  "Absolutely loved the finish! Looks exactly like the photos.",
-                                  5,
-                                ),
-                                _buildReviewItem(
-                                  "Rahul K.",
-                                  "Great packaging and timely delivery.",
-                                  4,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Beautiful Seller Info
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey[200]!),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryOrange,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      "R",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Row(
-                                        children: [
-                                          Text(
-                                            "Rudram Official",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          SizedBox(width: 4),
-                                          Icon(
-                                            Icons.verified,
-                                            size: 16,
-                                            color: Colors.blue,
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        "Member since 2015",
-                                        style: TextStyle(
-                                          color: Colors.grey[500],
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            size: 14,
-                                            color: Colors.amber,
-                                          ),
-                                          Text(
-                                            " 4.9 Seller Rating",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                OutlinedButton(
-                                  onPressed: () {},
-                                  style: OutlinedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  child: const Text("Visit"),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(height: 48),
-
-                    // Perfect Combinations
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Perfect Combinations",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                              ),
+                            ],
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "View All",
-                            style: TextStyle(color: AppColors.primaryOrange),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 280,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _accessories.length,
-                        itemBuilder: (context, index) => Stack(
+                        const Divider(height: 48),
+
+                        // Perfect Combinations
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ProductCard(product: _accessories[index]),
-                            Positioned(
-                              bottom: 90,
-                              right: 20,
-                              child: Material(
-                                elevation: 4,
-                                shape: const CircleBorder(),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 18,
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    icon: const Icon(
-                                      Icons.add,
-                                      size: 22,
-                                      color: AppColors.primaryOrange,
-                                    ),
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text("Added to Bundle!"),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                            const Text(
+                              "Perfect Combinations",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {},
+                              child: const Text(
+                                "View All",
+                                style: TextStyle(
+                                  color: AppColors.primaryOrange,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-
-                    // Other Sections...
-                    _buildSectionHeader("Celebrity Spotted"),
-                    SizedBox(
-                      height: 120,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          _buildCelebAvatar(
-                            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
-                            "Deepika",
+                        SizedBox(
+                          height: 280,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: _accessories.length,
+                            itemBuilder: (context, index) => Stack(
+                              children: [
+                                ProductCard(product: _accessories[index]),
+                                Positioned(
+                                  bottom: 90,
+                                  right: 20,
+                                  child: Material(
+                                    elevation: 4,
+                                    shape: const CircleBorder(),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 18,
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: const Icon(
+                                          Icons.add,
+                                          size: 22,
+                                          color: AppColors.primaryOrange,
+                                        ),
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text("Added to Bundle!"),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          _buildCelebAvatar(
-                            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200",
-                            "Priyanka",
-                          ),
-                          _buildCelebAvatar(
-                            "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200",
-                            "Alia",
-                          ),
-                          _buildCelebAvatar(
-                            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
-                            "Katrina",
-                          ),
-                        ],
-                      ),
-                    ),
-                    _buildSectionHeader("The Craftsmanship"),
-                    Container(
-                      height: 180,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        image: const DecorationImage(
-                          image: NetworkImage(
-                            "https://images.unsplash.com/photo-1618401479427-c8ef9465fbe1?w=600",
-                          ),
-                          fit: BoxFit.cover,
                         ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.black.withValues(alpha: 0.7),
-                              Colors.transparent,
+
+                        _buildSectionHeader("Celebrity Spotted"),
+                        SizedBox(
+                          height: 120,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            children: [
+                              _buildCelebAvatar(
+                                "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
+                                "Deepika",
+                              ),
+                              _buildCelebAvatar(
+                                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200",
+                                "Priyanka",
+                              ),
+                              _buildCelebAvatar(
+                                "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200",
+                                "Alia",
+                              ),
+                              _buildCelebAvatar(
+                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
+                                "Katrina",
+                              ),
                             ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
                           ),
                         ),
-                        alignment: Alignment.bottomLeft,
-                        padding: const EdgeInsets.all(16),
-                        child: const Text(
-                          "Hand-polished by master artisans in Jaipur.",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // 4. Premium Unboxing
-                    _buildSectionHeader("Premium Unboxing"),
-                    Container(
-                      height: 140,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1A1A1A),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.horizontal(
-                                left: Radius.circular(16),
+                        _buildSectionHeader("The Craftsmanship"),
+                        Container(
+                          height: 180,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            image: const DecorationImage(
+                              image: NetworkImage(
+                                "https://images.unsplash.com/photo-1618401479427-c8ef9465fbe1?w=600",
                               ),
-                              child: Image.network(
-                                "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=300",
-                                fit: BoxFit.cover,
-                              ),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          const Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Signature Velvet Box",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Included with purchase",
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
-                                  ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.black.withValues(alpha: 0.7),
+                                  Colors.transparent,
                                 ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                            ),
+                            alignment: Alignment.bottomLeft,
+                            padding: const EdgeInsets.all(16),
+                            child: const Text(
+                              "Hand-polished by master artisans in Jaipur.",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-
-                    // 5. Video Showcase
-                    _buildSectionHeader("Watch Product Video"),
-                    Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        image: const DecorationImage(
-                          image: NetworkImage(
-                            "https://images.unsplash.com/photo-1574484284008-86d47dc7b6dc?w=600",
-                          ),
-                          fit: BoxFit.cover,
                         ),
-                      ),
-                      child: Center(
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white.withValues(alpha: 0.8),
-                          radius: 30,
-                          child: const Icon(
-                            Icons.play_arrow,
-                            color: Colors.black,
-                            size: 30,
+
+                        // 4. Premium Unboxing
+                        _buildSectionHeader("Premium Unboxing"),
+                        Container(
+                          height: 140,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1A1A1A),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.horizontal(
+                                    left: Radius.circular(16),
+                                  ),
+                                  child: Image.network(
+                                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=300",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Signature Velvet Box",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Included with purchase",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ),
 
-                    // 6. Trusted By Badges
-                    _buildSectionHeader("Trusted By Millions"),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildTrustBadge(Icons.verified_user, "BIS Hallmarked"),
-                        _buildTrustBadge(Icons.diamond, "Certified"),
-                        _buildTrustBadge(Icons.sync_alt, "Lifetime Exchange"),
-                        _buildTrustBadge(Icons.local_shipping, "Insured"),
-                      ],
-                    ),
-
-                    // 7. Gold Rate Banner
-                    Container(
-                      margin: const EdgeInsets.only(top: 24),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow[50],
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.yellow[100]!),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Current Gold Rate (22K)",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "₹ 6,550 / gram",
-                            style: TextStyle(
-                              color: AppColors.primaryOrange,
-                              fontWeight: FontWeight.bold,
+                        // 5. Video Showcase
+                        _buildSectionHeader("Watch Product Video"),
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            image: const DecorationImage(
+                              image: NetworkImage(
+                                "https://images.unsplash.com/photo-1574484284008-86d47dc7b6dc?w=600",
+                              ),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
+                          child: Center(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.8,
+                              ),
+                              radius: 30,
+                              child: const Icon(
+                                Icons.play_arrow,
+                                color: Colors.black,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ),
 
-                    // 8. Warranty & Support
-                    _buildSectionHeader("Warranty & Support"),
-                    const ExpansionTile(
-                      title: Text("1 Year Replacement Warranty"),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            "Covers any manufacturing defects. Stone loss covered for 6 months.",
+                        // 6. Trusted By Badges
+                        _buildSectionHeader("Trusted By Millions"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildTrustBadge(
+                              Icons.verified_user,
+                              "BIS Hallmarked",
+                            ),
+                            _buildTrustBadge(Icons.diamond, "Certified"),
+                            _buildTrustBadge(
+                              Icons.sync_alt,
+                              "Lifetime Exchange",
+                            ),
+                            _buildTrustBadge(Icons.local_shipping, "Insured"),
+                          ],
+                        ),
+
+                        // 7. Gold Rate Banner
+                        Container(
+                          margin: const EdgeInsets.only(top: 24),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow[50],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.yellow[100]!),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Current Gold Rate (22K)",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "₹ 6,550 / gram",
+                                style: TextStyle(
+                                  color: AppColors.primaryOrange,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // 8. Warranty & Support
+                        _buildSectionHeader("Warranty & Support"),
+                        const ExpansionTile(
+                          title: Text("1 Year Replacement Warranty"),
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text(
+                                "Covers any manufacturing defects. Stone loss covered for 6 months.",
+                              ),
+                            ),
+                          ],
+                        ),
+                        const ExpansionTile(
+                          title: Text("Authenticity Certificate"),
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Text(
+                                "BIS Hallmarked 22K Gold certificate included.",
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // 9. People Also Viewed
+                        _buildSectionHeader("People Also Viewed"),
+                        SizedBox(
+                          height: 280,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: _similar.length,
+                            itemBuilder: (context, index) =>
+                                ProductCard(product: _similar[index]),
                           ),
                         ),
                       ],
                     ),
-                    const ExpansionTile(
-                      title: Text("Authenticity Certificate"),
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            "BIS Hallmarked 22K Gold certificate included.",
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // 9. People Also Viewed
-                    _buildSectionHeader("People Also Viewed"),
-                    SizedBox(
-                      height: 280,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _similar.length,
-                        itemBuilder: (context, index) =>
-                            ProductCard(product: _similar[index]),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               );
             },

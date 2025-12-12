@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 import '../screens/luxury_screen.dart';
+import '../screens/cart_screen.dart';
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({super.key});
@@ -107,6 +108,25 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ),
 
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CartScreen()),
+                  );
+                },
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: CircleBorder(
+                    side: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
+                  ),
+                ),
+                icon: const Icon(
+                  Icons.shopping_bag_outlined,
+                  color: AppColors.textGrey,
+                ),
+              ),
+              const SizedBox(width: 8),
               IconButton(
                 onPressed: () {},
                 icon: const Icon(

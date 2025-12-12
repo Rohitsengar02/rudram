@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
 
 class LuxuryHomeContent extends StatefulWidget {
   const LuxuryHomeContent({super.key});

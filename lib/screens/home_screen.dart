@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/home_tab.dart';
 import 'cart_screen.dart';
-import 'wishlist_screen.dart';
+import 'shop_screen.dart';
 import 'wallet_screen.dart';
 import 'profile_screen.dart';
 
@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const HomeTab(),
     const CartScreen(),
-    const WishlistScreen(),
+    const ShopScreen(),
     const WalletScreen(),
     const ProfileScreen(),
   ];

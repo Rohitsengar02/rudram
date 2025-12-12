@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'custom_app_bar.dart';
 import 'search_bar_widget.dart';
 import 'hero_banner.dart';
@@ -40,11 +41,12 @@ class HomeTab extends StatelessWidget {
         children: [
           const CustomAppBar(),
           Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            child: AnimationLimiter(
+              child: ListView(
+                physics: const BouncingScrollPhysics(),
+                addAutomaticKeepAlives: true,
+                cacheExtent: 2000, // Pre-render more items for smoother scroll
+                children: Algorithm.run([
                   const SearchBarWidget(),
                   const SizedBox(height: 6),
                   const HeroBanner(),
@@ -102,12 +104,25 @@ class HomeTab extends StatelessWidget {
                   const SizedBox(height: 8),
                   const AwardsSection(),
                   const FooterSection(),
-                ],
+                ]),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class Algorithm {
+  static List<Widget> run(List<Widget> children) {
+    return AnimationConfiguration.toStaggeredList(
+      duration: const Duration(milliseconds: 375),
+      childAnimationBuilder: (widget) => SlideAnimation(
+        verticalOffset: 50.0,
+        child: FadeInAnimation(child: widget),
+      ),
+      children: children,
     );
   }
 }
