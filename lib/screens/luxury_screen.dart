@@ -6,6 +6,8 @@ import 'luxury_shop_screen.dart';
 import 'luxury_concierge_screen.dart';
 import 'luxury_wishlist_screen.dart';
 import 'luxury_profile_screen.dart';
+import 'watch_and_shop_screen.dart';
+import 'reels_screen.dart';
 
 class LuxuryScreen extends StatefulWidget {
   const LuxuryScreen({super.key});
@@ -22,10 +24,10 @@ class _LuxuryScreenState extends State<LuxuryScreen>
   late AnimationController _loadingController;
   late Animation<double> _loadingAnimation;
 
+  // Screen mapping: 0:Home, 1:Shop, 2:Wishlist, 3:Profile.
   List<Widget> get _screens => [
     const LuxuryHomeContent(),
     const LuxuryShopScreen(),
-    const LuxuryConciergeScreen(),
     const LuxuryWishlistScreen(),
     const LuxuryProfileScreen(),
   ];
@@ -55,6 +57,146 @@ class _LuxuryScreenState extends State<LuxuryScreen>
   void dispose() {
     _loadingController.dispose();
     super.dispose();
+  }
+
+  void _showMenuSlider(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: Border(
+              top: BorderSide(
+                color: const Color(0xFFD4AF37).withValues(alpha: 0.5),
+                width: 1,
+              ),
+            ),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                "E X C L U S I V E   A C C E S S",
+                style: TextStyle(
+                  color: Color(0xFFD4AF37),
+                  letterSpacing: 3,
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  children: [
+                    _buildMenuItem(
+                      context,
+                      Icons.video_library_outlined,
+                      "Watch & Shop",
+                      "Immersive video shopping",
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const WatchAndShopScreen(),
+                        ),
+                      ),
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Icons.play_circle_outline,
+                      "Reels Gallery",
+                      "Discover trends",
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ReelsScreen()),
+                      ),
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Icons.chat_bubble_outline,
+                      "Concierge Service",
+                      "24/7 Personal Assistance",
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const LuxuryConciergeScreen(),
+                        ),
+                      ),
+                    ),
+                    const Divider(color: Colors.grey),
+                    _buildMenuItem(
+                      context,
+                      Icons.settings_outlined,
+                      "Settings",
+                      "App preferences",
+                      () {},
+                    ),
+                    _buildMenuItem(
+                      context,
+                      Icons.help_outline,
+                      "Support",
+                      "FAQs & Contact",
+                      () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuItem(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    VoidCallback onTap,
+  ) {
+    return ListTile(
+      onTap: onTap,
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 24),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontFamily: 'Playfair Display',
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+      ),
+      trailing: const Icon(
+        Icons.arrow_forward_ios,
+        color: Color(0xFFD4AF37),
+        size: 14,
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+    );
   }
 
   @override
@@ -111,9 +253,40 @@ class _LuxuryScreenState extends State<LuxuryScreen>
     return Scaffold(
       backgroundColor: Colors.black,
       extendBody: true,
+
+      floatingActionButton: Container(
+        height: 64,
+        width: 64,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            colors: [Color(0xFFD4AF37), Color(0xFFFFD700)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFD4AF37).withValues(alpha: 0.4),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 2,
+          ),
+        ),
+        child: FloatingActionButton(
+          onPressed: () => _showMenuSlider(context),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: const Icon(Icons.add, color: Colors.black, size: 32),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.black,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -121,32 +294,101 @@ class _LuxuryScreenState extends State<LuxuryScreen>
             ),
           ],
         ),
-        child: SafeArea(
+        child: BottomAppBar(
+          color: Colors.black,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 8,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[800]!,
-              hoverColor: Colors.grey[900]!,
-              gap: 4, // Reduced gap for 5 items
-              activeColor: const Color(0xFFD4AF37),
-              iconSize: 22, // Slightly smaller icons
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: const Color(0xFF1A1A1A),
-              color: Colors.grey[600],
-              tabs: const [
-                GButton(icon: Icons.home_filled, text: 'Home'),
-                GButton(icon: Icons.storefront, text: 'Shop'),
-                GButton(icon: Icons.chat_bubble_outline, text: 'Concierge'),
-                GButton(icon: Icons.favorite_border, text: 'Wishlist'),
-                GButton(icon: Icons.person_outline, text: 'Profile'),
+            padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Left Tabs (Home, Shop)
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: GNav(
+                          rippleColor: Colors.grey[800]!,
+                          hoverColor: Colors.grey[900]!,
+                          gap: 6, // Reduced gap
+                          activeColor: const Color(0xFFD4AF37),
+                          iconSize: 22,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ), // Reduced padding
+                          duration: const Duration(milliseconds: 300),
+                          tabBackgroundColor: const Color(0xFF1A1A1A),
+                          color: Colors.grey[600],
+                          tabs: const [
+                            GButton(icon: Icons.home_filled, text: 'Home'),
+                            GButton(icon: Icons.storefront, text: 'Shop'),
+                          ],
+                          selectedIndex: _selectedIndex < 2
+                              ? _selectedIndex
+                              : -1,
+                          onTabChange: (index) =>
+                              setState(() => _selectedIndex = index),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Gap for FAB is handled by Expanded spacing automatically if we don't put anything there?
+                // Actually, we need a transparent SizedBox to push content away from center
+                const SizedBox(width: 40), // Reduced width
+                // Right Tabs (Wishlist, Profile)
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          right: 4.0,
+                        ), // Reduced edge padding
+                        child: GNav(
+                          rippleColor: Colors.grey[800]!,
+                          hoverColor: Colors.grey[900]!,
+                          gap: 6, // Reduced gap
+                          activeColor: const Color(0xFFD4AF37),
+                          iconSize: 22,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ), // Reduced padding
+                          duration: const Duration(milliseconds: 300),
+                          tabBackgroundColor: const Color(0xFF1A1A1A),
+                          color: Colors.grey[600],
+                          tabs: const [
+                            GButton(
+                              icon: Icons.favorite_border,
+                              text: 'Wishlist',
+                            ),
+                            GButton(
+                              icon: Icons.person_outline,
+                              text: 'Profile',
+                            ),
+                          ],
+                          selectedIndex: _selectedIndex >= 2
+                              ? _selectedIndex - 2
+                              : -1,
+                          onTabChange: (index) =>
+                              setState(() => _selectedIndex = index + 2),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
-              selectedIndex: _selectedIndex,
-              onTabChange: (index) => setState(() => _selectedIndex = index),
             ),
           ),
         ),
       ),
+
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 600),
         switchInCurve: Curves.easeOut,

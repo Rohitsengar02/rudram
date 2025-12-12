@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'watch_and_shop_screen.dart';
 
 class LuxuryHomeContent extends StatefulWidget {
   const LuxuryHomeContent({super.key});
@@ -181,6 +182,69 @@ class _LuxuryHomeContentState extends State<LuxuryHomeContent> {
                     "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=200",
                   ),
                 ],
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // Watch & Shop Banner
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WatchAndShopScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                height: 180,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(0),
+                  image: DecorationImage(
+                    image: const NetworkImage(
+                      "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800",
+                    ), // Gradient or abstract luxury background
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withValues(alpha: 0.3),
+                      BlendMode.darken,
+                    ),
+                  ),
+                  border: Border.all(
+                    color: const Color(0xFFD4AF37).withValues(alpha: 0.5),
+                  ),
+                ),
+                child: const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.play_circle_outline,
+                        color: Colors.white,
+                        size: 48,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "WATCH & SHOP",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Playfair Display',
+                          fontSize: 24,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                      Text(
+                        "Experience jewellery in motion",
+                        style: TextStyle(
+                          color: Color(0xFFD4AF37),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
 

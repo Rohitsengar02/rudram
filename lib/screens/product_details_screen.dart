@@ -207,7 +207,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
               child: Image.network(
                 _images[_currentImageIndex],
                 fit: BoxFit.cover,
-                errorBuilder: (context, _, __) =>
+                errorBuilder: (context, error, stackTrace) =>
                     Container(color: Colors.grey[100]),
               ),
             ),

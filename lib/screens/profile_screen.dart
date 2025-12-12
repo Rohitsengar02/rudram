@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../utils/app_colors.dart';
-import 'dart:math' as math;
+import 'package:provider/provider.dart';
+import '../utils/theme_provider.dart';
 
 class BubbleData {
   final double x;
@@ -30,7 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     with TickerProviderStateMixin {
   late AnimationController _entranceController;
   late ScrollController _scrollController;
-
   late Animation<double> _avatarPositionAnimation;
   late Animation<double> _contentOpacityAnimation;
   late Animation<Offset> _contentSlideAnimation;
@@ -40,16 +40,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
-
-    // Scroll controller for parallax and scroll-triggered animations
     _scrollController = ScrollController()
       ..addListener(() {
-        setState(() {
-          _scrollOffset = _scrollController.offset;
-        });
+        setState(() => _scrollOffset = _scrollController.offset);
       });
 
-    // Entrance animation
     _entranceController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -77,11 +72,8 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         );
 
-    // Start animation
     Future.delayed(const Duration(milliseconds: 300), () {
-      if (mounted) {
-        _entranceController.forward();
-      }
+      if (mounted) _entranceController.forward();
     });
   }
 
@@ -95,17 +87,18 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    // We rely on Theme.of(context) so no direct provider access needed here for styling
+    // unless logic depends on it. background color handled by Scaffold default from Theme.
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      // Background handled by Theme (white/black)
       body: AnimatedBuilder(
         animation: _entranceController,
         builder: (context, child) {
           return Stack(
             children: [
-              // Clean Cover gradient background
               Positioned(
-                top: -_scrollOffset * 0.5, // Parallax effect
+                top: -_scrollOffset * 0.5,
                 left: 0,
                 right: 0,
                 height: 250,
@@ -122,37 +115,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                   child: Stack(
                     children: [
-                      // Animated circles for visual interest
                       Positioned(
                         top: -50,
                         right: -50,
-                        child: Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withValues(alpha: 0.1),
-                          ),
-                        ),
+                        child: _circleOverlay(200, 0.1),
                       ),
                       Positioned(
                         bottom: -30,
                         left: -30,
-                        child: Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withValues(alpha: 0.08),
-                          ),
-                        ),
+                        child: _circleOverlay(150, 0.08),
                       ),
                     ],
                   ),
                 ),
               ),
-
-              // Content with scroll
               CustomScrollView(
                 controller: _scrollController,
                 slivers: [
@@ -162,26 +138,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                           200 + (_avatarPositionAnimation.value * screenHeight),
                     ),
                   ),
-
-                  // Profile Avatar
                   SliverToBoxAdapter(
                     child: Transform.translate(
                       offset: const Offset(0, -50),
                       child: Center(
                         child: Column(
                           children: [
-                            // Simple Profile Photo with border
                             Container(
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: Colors.white,
+                                  color: Theme.of(context).cardColor,
                                   width: 4,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black.withValues(alpha: 0.1),
                                     blurRadius: 20,
                                     spreadRadius: 2,
                                   ),
@@ -191,19 +164,21 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 tag: 'profile_avatar',
                                 child: CircleAvatar(
                                   radius: 60,
-                                  backgroundImage: NetworkImage(
+                                  backgroundImage: const NetworkImage(
                                     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
+                            Text(
                               "Rohit Kumar",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.color,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -211,7 +186,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                               "rohit@example.com",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey[600],
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium?.color,
                               ),
                             ),
                           ],
@@ -219,17 +196,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                     ),
                   ),
-
-                  // Content with fade and slide
                   SliverToBoxAdapter(
                     child: FadeTransition(
                       opacity: _contentOpacityAnimation,
                       child: SlideTransition(
                         position: _contentSlideAnimation,
-                        child: _buildProfileContent(),
+                        child: _buildProfileContent(context),
                       ),
                     ),
                   ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: 100),
+                  ), // Bottom padding
                 ],
               ),
             ],
@@ -239,7 +217,18 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget _buildProfileContent() {
+  Widget _circleOverlay(double size, double opacity) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withValues(alpha: opacity),
+      ),
+    );
+  }
+
+  Widget _buildProfileContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: AnimationLimiter(
@@ -252,11 +241,11 @@ class _ProfileScreenState extends State<ProfileScreen>
               child: FadeInAnimation(child: widget),
             ),
             children: [
-              _buildStatsRow(),
+              _buildStatsRow(context),
               const SizedBox(height: 24),
-              _buildQuickActionsCarousel(),
+              _buildQuickActionsCarousel(context),
               const SizedBox(height: 24),
-              _buildMenuSection(),
+              _buildMenuSection(context),
             ],
           ),
         ),
@@ -264,16 +253,15 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget _buildStatsRow() {
-    // Calculate opacity based on scroll for scroll-triggered animation
+  Widget _buildStatsRow(BuildContext context) {
     final opacity = (1 - (_scrollOffset / 100)).clamp(0.3, 1.0);
-
     return Opacity(
       opacity: opacity,
       child: Row(
         children: [
           Expanded(
             child: _buildStatCard(
+              context,
               "12",
               "Orders",
               Icons.shopping_bag_outlined,
@@ -283,6 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           const SizedBox(width: 12),
           Expanded(
             child: _buildStatCard(
+              context,
               "8",
               "Wishlist",
               Icons.favorite_outline,
@@ -292,6 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           const SizedBox(width: 12),
           Expanded(
             child: _buildStatCard(
+              context,
               "₹4.2K",
               "Rewards",
               Icons.card_giftcard_outlined,
@@ -304,30 +294,34 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget _buildStatCard(
+    BuildContext context,
     String value,
     String label,
     IconData icon,
     Color color,
   ) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
+          if (!isDark)
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
         ],
+        border: isDark ? Border.all(color: Colors.white12) : null,
       ),
       child: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 24),
@@ -335,29 +329,35 @@ class _ProfileScreenState extends State<ProfileScreen>
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
           ),
           const SizedBox(height: 4),
-          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildQuickActionsCarousel() {
+  Widget _buildQuickActionsCarousel(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Quick Actions",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: AppColors.textDark,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
         ),
         const SizedBox(height: 16),
@@ -368,24 +368,32 @@ class _ProfileScreenState extends State<ProfileScreen>
             clipBehavior: Clip.none,
             children: [
               _buildActionCard(
+                context,
                 "Edit Profile",
                 Icons.edit_outlined,
                 Colors.purple,
               ),
               const SizedBox(width: 12),
               _buildActionCard(
+                context,
                 "My Orders",
                 Icons.receipt_long_outlined,
                 Colors.blue,
               ),
               const SizedBox(width: 12),
               _buildActionCard(
+                context,
                 "Addresses",
                 Icons.location_on_outlined,
                 Colors.orange,
               ),
               const SizedBox(width: 12),
-              _buildActionCard("Payment", Icons.payment_outlined, Colors.green),
+              _buildActionCard(
+                context,
+                "Payment",
+                Icons.payment_outlined,
+                Colors.green,
+              ),
             ],
           ),
         ),
@@ -393,7 +401,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget _buildActionCard(String title, IconData icon, Color color) {
+  Widget _buildActionCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       width: 100,
       padding: const EdgeInsets.all(16),
@@ -401,12 +414,12 @@ class _ProfileScreenState extends State<ProfileScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [color.withOpacity(0.8), color],
+          colors: [color.withValues(alpha: 0.8), color],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -431,36 +444,94 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget _buildMenuSection() {
+  Widget _buildMenuSection(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
+          if (!isDark)
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
         ],
+        border: isDark ? Border.all(color: Colors.white12) : null,
       ),
       child: Column(
         children: [
-          _buildMenuItem(Icons.history_outlined, "Order History", Colors.blue),
-          _buildDivider(),
-          _buildMenuItem(Icons.favorite_border, "My Wishlist", Colors.red),
-          _buildDivider(),
           _buildMenuItem(
+            context,
+            Icons.history_outlined,
+            "Order History",
+            Colors.blue,
+          ),
+          _buildDivider(context),
+          // Dark Mode Toggle
+          SwitchListTile(
+            title: Text(
+              "Dark Mode",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
+            secondary: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.purple.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.dark_mode_outlined,
+                color: Colors.purple,
+                size: 24,
+              ),
+            ),
+            value: themeProvider.isDarkMode,
+            onChanged: (value) => themeProvider.toggleTheme(value),
+            activeTrackColor: AppColors.primaryOrange,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 4,
+            ),
+          ),
+          _buildDivider(context),
+          _buildMenuItem(
+            context,
+            Icons.favorite_border,
+            "My Wishlist",
+            Colors.red,
+          ),
+          _buildDivider(context),
+          _buildMenuItem(
+            context,
             Icons.notifications_outlined,
             "Notifications",
             Colors.orange,
           ),
-          _buildDivider(),
-          _buildMenuItem(Icons.settings_outlined, "Settings", Colors.grey),
-          _buildDivider(),
-          _buildMenuItem(Icons.help_outline, "Help & Support", Colors.green),
-          _buildDivider(),
+          _buildDivider(context),
           _buildMenuItem(
+            context,
+            Icons.settings_outlined,
+            "Settings",
+            Colors.grey,
+          ),
+          _buildDivider(context),
+          _buildMenuItem(
+            context,
+            Icons.help_outline,
+            "Help & Support",
+            Colors.green,
+          ),
+          _buildDivider(context),
+          _buildMenuItem(
+            context,
             Icons.logout,
             "Logout",
             Colors.red,
@@ -472,6 +543,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget _buildMenuItem(
+    BuildContext context,
     IconData icon,
     String title,
     Color color, {
@@ -486,7 +558,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 24),
@@ -498,7 +570,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: isDestructive ? Colors.red : AppColors.textDark,
+                  color: isDestructive
+                      ? Colors.red
+                      : Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
             ),
@@ -509,10 +583,10 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget _buildDivider() {
+  Widget _buildDivider(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Divider(height: 1, color: Colors.grey[200]),
+      child: Divider(height: 1, color: Theme.of(context).dividerColor),
     );
   }
 }
