@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'custom_app_bar.dart';
-import 'search_bar_widget.dart';
+import 'enhanced_search_bar.dart';
 import 'hero_banner.dart';
 import 'category_section.dart';
 import 'flash_sale_section.dart';
@@ -30,6 +29,7 @@ import 'community_gallery_section.dart';
 import 'faq_section.dart';
 import 'awards_section.dart';
 import 'footer_section.dart';
+import 'feature_carousel_section.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -37,78 +37,72 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        children: [
-          const CustomAppBar(),
-          Expanded(
-            child: AnimationLimiter(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                addAutomaticKeepAlives: true,
-                cacheExtent: 2000, // Pre-render more items for smoother scroll
-                children: Algorithm.run([
-                  const SearchBarWidget(),
-                  const SizedBox(height: 6),
-                  const HeroBanner(),
-                  const SizedBox(height: 8),
-                  const CategorySection(),
-                  const SizedBox(height: 4),
-                  FlashSaleSection(),
-                  const SizedBox(height: 0),
-                  NewArrivalsSection(),
-                  const SizedBox(height: 0),
-                  BestSellersSection(),
-                  const SizedBox(height: 0),
-                  TrendingNowSection(),
-                  const SizedBox(height: 0),
-                  const ExclusiveOffersBanner(),
-                  const SizedBox(height: 4),
-                  const ShopByOccasionSection(),
-                  const DealsOfTheDaySection(),
-                  const SizedBox(height: 0),
-                  const PerfectMatchSection(),
-                  const SizedBox(height: 4),
-                  const DealsOfTheDaySection(),
-                  const SizedBox(height: 0),
-                  const LuxurySection(),
-                  const SizedBox(height: 8),
-                  const WatchAndShopSection(),
-                  const SizedBox(height: 8),
-                  const BlogSection(),
-                  const SizedBox(height: 8),
-                  const InstaFamilySection(),
-                  const SizedBox(height: 8),
-                  AllProductsSection(),
-                  const SizedBox(height: 8),
-                  const OurFeaturesSection(),
-                  const SizedBox(height: 8),
-                  TempleJewellerySection(),
-                  const SizedBox(height: 8),
-                  const CelebrityStyleSection(),
-                  const SizedBox(height: 8),
-                  const GoldSchemeSection(),
-                  const SizedBox(height: 8),
-                  const DesignersSpotlight(),
-                  const SizedBox(height: 8),
-                  const GiftGuideSection(),
-                  const SizedBox(height: 8),
-                  const TestimonialsSection(),
-                  const SizedBox(height: 12),
-                  const NewsletterSection(),
-                  const SizedBox(height: 12),
-                  const BrandMarqueeSection(),
-                  const SizedBox(height: 8),
-                  const CommunityGallerySection(),
-                  const SizedBox(height: 8),
-                  const FaqSection(),
-                  const SizedBox(height: 8),
-                  const AwardsSection(),
-                  const FooterSection(),
-                ]),
-              ),
-            ),
-          ),
-        ],
+      child: AnimationLimiter(
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          addAutomaticKeepAlives: true,
+          cacheExtent: 2000, // Pre-render more items for smoother scroll
+          children: Algorithm.run([
+            const FeatureCarouselSection(),
+            const EnhancedSearchBar(),
+            const SizedBox(height: 6),
+            const HeroBanner(),
+            const SizedBox(height: 8),
+            const CategorySection(),
+            const SizedBox(height: 4),
+            FlashSaleSection(),
+            const SizedBox(height: 0),
+            NewArrivalsSection(),
+            const SizedBox(height: 0),
+            BestSellersSection(),
+            const SizedBox(height: 0),
+            TrendingNowSection(),
+            const SizedBox(height: 0),
+            const ExclusiveOffersBanner(),
+            const SizedBox(height: 4),
+            const ShopByOccasionSection(),
+            const DealsOfTheDaySection(),
+            const SizedBox(height: 0),
+            const PerfectMatchSection(),
+            const SizedBox(height: 4),
+            const DealsOfTheDaySection(),
+            const SizedBox(height: 0),
+            const LuxurySection(),
+            const SizedBox(height: 8),
+            const WatchAndShopSection(),
+            const SizedBox(height: 8),
+            const BlogSection(),
+            const SizedBox(height: 8),
+            const InstaFamilySection(),
+            const SizedBox(height: 8),
+            AllProductsSection(),
+            const SizedBox(height: 8),
+            const OurFeaturesSection(),
+            const SizedBox(height: 8),
+            TempleJewellerySection(),
+            const SizedBox(height: 8),
+            CelebrityStyleSection(),
+            const SizedBox(height: 8),
+            GoldSchemeSection(),
+            const SizedBox(height: 8),
+            const DesignersSpotlight(),
+            const SizedBox(height: 8),
+            GiftGuideSection(),
+            const SizedBox(height: 8),
+            TestimonialsSection(),
+            const SizedBox(height: 12),
+            const NewsletterSection(),
+            const SizedBox(height: 12),
+            const BrandMarqueeSection(),
+            const SizedBox(height: 8),
+            CommunityGallerySection(),
+            const SizedBox(height: 8),
+            FaqSection(),
+            const SizedBox(height: 8),
+            const AwardsSection(),
+            const FooterSection(),
+          ]),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'screens/home_screen.dart';
 import 'utils/app_colors.dart';
 
@@ -6,6 +7,17 @@ import 'package:provider/provider.dart';
 import 'utils/theme_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Set status bar style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Transparent status bar
+      statusBarIconBrightness: Brightness.dark, // Dark icons (black text)
+      statusBarBrightness: Brightness.light, // For iOS
+    ),
+  );
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
