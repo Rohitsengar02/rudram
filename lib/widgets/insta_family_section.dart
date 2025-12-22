@@ -46,10 +46,11 @@ class InstaFamilySection extends StatelessWidget {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent:
+                  130, // 3 cols on mobile (~390/3=130), many on desktop
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
             ),
             itemCount: images.length,
             itemBuilder: (context, index) {

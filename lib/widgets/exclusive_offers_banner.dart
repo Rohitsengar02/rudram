@@ -95,46 +95,62 @@ class _ExclusiveOffersBannerState extends State<ExclusiveOffersBanner>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Icon(Icons.local_offer, color: AppColors.primaryOrange, size: 20),
-              const SizedBox(width: 8),
-              const Text(
-                "Exclusive Offers",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Simple breakpoint
+        bool isDesktop = constraints.maxWidth > 600;
+        double bannerHeight = isDesktop ? 400 : 194;
+
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.local_offer,
+                    color: AppColors.primaryOrange,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "Exclusive Offers",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textDark,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 194,
-          child: PageView.builder(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
-            },
-            itemCount: _offers.length,
-            itemBuilder: (context, index) {
-              return _buildOfferBanner(_offers[index]);
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(_offers.length, (index) => _buildDot(index)),
-        ),
-      ],
+            ),
+            SizedBox(
+              height: bannerHeight,
+              child: PageView.builder(
+                controller: _pageController,
+                padEnds: false, // Ensure full width usage if valid
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentPage = index;
+                  });
+                },
+                itemCount: _offers.length,
+                itemBuilder: (context, index) {
+                  return _buildOfferBanner(_offers[index]);
+                },
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                _offers.length,
+                (index) => _buildDot(index),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

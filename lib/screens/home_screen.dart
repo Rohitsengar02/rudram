@@ -9,6 +9,8 @@ import 'profile_screen.dart';
 
 import 'watch_and_shop_screen.dart';
 import 'celebrity_style_screen.dart';
+import 'desktop/desktop_home_screen.dart';
+import '../widgets/responsive_layout.dart';
 import '../utils/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -214,6 +216,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return ResponsiveLayout(
+      mobileBody: _buildMobileLayout(),
+      desktopBody: const DesktopHomeScreen(),
+    );
+  }
+
+  Widget _buildMobileLayout() {
     return Scaffold(
       extendBody: true, // Content behind nav bar
       body: IndexedStack(index: _selectedIndex, children: _screens),

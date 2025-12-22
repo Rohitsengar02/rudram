@@ -77,23 +77,14 @@ class AllProductsSection extends StatelessWidget {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.62, // Adjusted for ProductCard height
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 280,
+              childAspectRatio: 0.75,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
             ),
             itemCount: products.length,
             itemBuilder: (context, index) {
-              // ProductCard is designed for horizontal list, might need tweaks or use as is
-              // ProductCard has fixed width 180, here width is flexible.
-              // Let's wrap ProductCard to just use its visual build but flexible width.
-              // Actually ProductCard has explicit width: 180. We need to make it flexible?
-              // Or better, creating a simple grid item here or modify ProductCard.
-              // Since ProductCard is StatelessWidget with fixed width, using it in GridView might cause issues or alignment.
-              // But let's try to just return the ProductCard content effectively.
-              // Actually, looking at ProductCard, it has Container width: 180.
-              // I will create a localized grid item here to ensure good look.
               return _buildGridProductItem(products[index]);
             },
           ),
