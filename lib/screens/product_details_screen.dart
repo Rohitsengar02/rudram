@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:provider/provider.dart';
 import '../utils/app_colors.dart';
 import '../models/data_models.dart';
 import '../widgets/product_card.dart';
+import '../providers/cart_provider.dart';
+import '../widgets/cart_sidebar.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final ProductItem product;
@@ -1019,7 +1022,46 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                 ],
               ),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  final cart = Provider.of<CartProvider>(
+                    context,
+                    listen: false,
+                  );
+                  cart.addItem(widget.product);
+
+                  // Show sidebar with cart
+                  showGeneralDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    barrierLabel: 'Cart',
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionDuration: const Duration(milliseconds: 300),
+                    pageBuilder: (context, anim1, anim2) {
+                      return Material(
+                        color: Colors.transparent,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(1, 0),
+                              end: Offset.zero,
+                            ).animate(anim1),
+                            child: const CartSidebar(),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+
+                  // Show snackbar
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${widget.product.title} added to cart!'),
+                      duration: const Duration(seconds: 2),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryOrange,
                   minimumSize: const Size(double.infinity, 56),

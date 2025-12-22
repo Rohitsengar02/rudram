@@ -12,6 +12,20 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final List<String> _productImages = [
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg",
+  ];
+
+  bool _isLoading = false;
+  int _currentPage = 0;
+  final int _itemsPerPage = 8;
+
   // Categories Data
   final List<CategoryItem> categories = [
     CategoryItem(
@@ -56,83 +70,113 @@ class _ShopScreenState extends State<ShopScreen> {
     ),
   ];
 
-  // Dummy Products Data for Grid
-  final List<ProductItem> products = [
-    ProductItem(
-      title: "Royal Emerald Ring",
-      currentPrice: 85000,
-      oldPrice: 95000,
-      discount: "10% Off",
-      image:
-          "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500",
-      bgColor: const Color(0xFFF5F5F5),
-    ),
-    ProductItem(
-      title: "Gold Art Necklace",
-      currentPrice: 125000,
-      oldPrice: 140000,
-      discount: "15% Off",
-      image:
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500",
-      bgColor: const Color(0xFFFFF8DC),
-    ),
-    ProductItem(
-      title: "Diamond Studs",
-      currentPrice: 45000,
-      oldPrice: 50000,
-      discount: "10% Off",
-      image:
-          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500",
-      bgColor: const Color(0xFFE8E8E8),
-    ),
-    ProductItem(
-      title: "Silver Bracelet",
-      currentPrice: 12000,
-      oldPrice: 15000,
-      discount: "20% Off",
-      image:
-          "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500",
-      bgColor: const Color(0xFFE0F7FA),
-    ),
-    ProductItem(
-      title: "Vintage Watch",
-      currentPrice: 25000,
-      oldPrice: 30000,
-      discount: "5K Off",
-      image:
-          "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500",
-      bgColor: const Color(0xFFFFF3E0),
-    ),
-    ProductItem(
-      title: "Pearl Set",
-      currentPrice: 32000,
-      oldPrice: 38000,
-      discount: "15% Off",
-      image:
-          "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500",
-      bgColor: const Color(0xFFF3E5F5),
-    ),
-    ProductItem(
-      title: "Luxury Solitaire",
-      currentPrice: 245000,
-      oldPrice: 300000,
-      discount: "18% Off",
-      image:
-          "https://images.unsplash.com/photo-1626784215032-2e3916fda07e?w=500",
-      bgColor: const Color(0xFFE3F2FD),
-    ),
-    ProductItem(
-      title: "Ruby Pendant",
-      currentPrice: 65000,
-      oldPrice: 72000,
-      discount: "10% Off",
-      image:
-          "https://images.unsplash.com/photo-1600721391776-b560d7306910?w=500",
-      bgColor: const Color(0xFFFFEBEE),
-    ),
-  ];
+  List<ProductItem> products = [];
+  List<ProductItem> allProducts = [];
+  String _selectedCategory = "All";
 
   RangeValues _priceRange = const RangeValues(10000, 500000);
+
+  List<ProductItem> get filteredProducts {
+    if (_selectedCategory == "All") {
+      return products;
+    }
+    return products.where((product) {
+      return product.title.toLowerCase().contains(
+        _selectedCategory.toLowerCase(),
+      );
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialProducts();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _loadInitialProducts() {
+    products = _generateProducts(0, _itemsPerPage);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoading) {
+      _loadMoreProducts();
+    }
+  }
+
+  Future<void> _loadMoreProducts() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    setState(() {
+      _currentPage++;
+      final newProducts = _generateProducts(
+        _currentPage * _itemsPerPage,
+        _itemsPerPage,
+      );
+      products.addAll(newProducts);
+      _isLoading = false;
+    });
+  }
+
+  List<ProductItem> _generateProducts(int startIndex, int count) {
+    return List.generate(count, (i) {
+      final index = startIndex + i;
+      final imageIndex = index % _productImages.length;
+
+      if (index % 4 == 0) {
+        return ProductItem(
+          title: "Royal Emerald Ring ${index + 1}",
+          currentPrice: 85000 + (index * 1000),
+          oldPrice: 95000 + (index * 1000),
+          discount: "10% Off",
+          image: _productImages[imageIndex],
+          bgColor: const Color(0xFFF5F5F5),
+        );
+      } else if (index % 4 == 1) {
+        return ProductItem(
+          title: "Gold Art Necklace ${index + 1}",
+          currentPrice: 125000 + (index * 2000),
+          oldPrice: 140000 + (index * 2000),
+          discount: "15% Off",
+          image: _productImages[imageIndex],
+          bgColor: const Color(0xFFFFF8DC),
+        );
+      } else if (index % 4 == 2) {
+        return ProductItem(
+          title: "Diamond Studs ${index + 1}",
+          currentPrice: 45000 + (index * 500),
+          oldPrice: 50000 + (index * 500),
+          discount: "10% Off",
+          image: _productImages[imageIndex],
+          bgColor: const Color(0xFFE8E8E8),
+        );
+      } else {
+        return ProductItem(
+          title: "Silver Bracelet ${index + 1}",
+          currentPrice: 12000 + (index * 300),
+          oldPrice: 15000 + (index * 300),
+          discount: "20% Off",
+          image: _productImages[imageIndex],
+          bgColor: const Color(0xFFE0F7FA),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +184,7 @@ class _ShopScreenState extends State<ShopScreen> {
       backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
         child: CustomScrollView(
+          controller: _scrollController,
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(child: _buildHeader()),
@@ -160,7 +205,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                     ),
                     Text(
-                      "${products.length} items",
+                      "${filteredProducts.length} items",
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                   ],
@@ -185,14 +230,27 @@ class _ShopScreenState extends State<ShopScreen> {
                       columnCount: 2,
                       child: ScaleAnimation(
                         child: FadeInAnimation(
-                          child: ProductCard(product: products[index]),
+                          child: ProductCard(product: filteredProducts[index]),
                         ),
                       ),
                     );
-                  }, childCount: products.length),
+                  }, childCount: filteredProducts.length),
                 ),
               ),
             ),
+
+            // Loading indicator
+            if (_isLoading)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryOrange,
+                    ),
+                  ),
+                ),
+              ),
 
             const SliverToBoxAdapter(
               child: SizedBox(height: 100),
@@ -328,29 +386,53 @@ class _ShopScreenState extends State<ShopScreen> {
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final cat = categories[index];
+              final isSelected = _selectedCategory == cat.title;
               return Padding(
                 padding: const EdgeInsets.only(right: 16),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 65,
-                      width: 65,
-                      decoration: BoxDecoration(
-                        color: cat.color,
-                        borderRadius: BorderRadius.circular(20),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedCategory = cat.title;
+                    });
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 65,
+                        width: 65,
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.primaryOrange
+                              : cat.color,
+                          borderRadius: BorderRadius.circular(20),
+                          border: isSelected
+                              ? Border.all(
+                                  color: AppColors.primaryOrange,
+                                  width: 2,
+                                )
+                              : null,
+                        ),
+                        child: Icon(
+                          cat.icon,
+                          color: isSelected ? Colors.white : Colors.black87,
+                          size: 28,
+                        ),
                       ),
-                      child: Icon(cat.icon, color: Colors.black87, size: 28),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      cat.title,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textDark,
+                      const SizedBox(height: 8),
+                      Text(
+                        cat.title,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w500,
+                          color: isSelected
+                              ? AppColors.primaryOrange
+                              : AppColors.textDark,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },

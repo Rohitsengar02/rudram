@@ -134,26 +134,36 @@ class AllProductsSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Row(
-            children: [
-              Text(
-                "₹${product.currentPrice}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
+          Flexible(
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    "₹${product.currentPrice}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textDark,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                "₹${product.oldPrice}",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textGrey,
-                  decoration: TextDecoration.lineThrough,
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    "₹${product.oldPrice}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textGrey,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

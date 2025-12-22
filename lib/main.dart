@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
 import 'providers/theme_provider.dart';
+import 'providers/cart_provider.dart';
+import 'providers/orders_provider.dart';
 
 // Lenis-like smooth scroll physics
 class LenisScrollPhysics extends ScrollPhysics {
@@ -118,8 +120,12 @@ void main() {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => OrdersProvider()),
+      ],
       child: const MyApp(),
     ),
   );

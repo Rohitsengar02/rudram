@@ -117,7 +117,7 @@ class ProductCard extends StatelessWidget {
             ),
             // Text Details
             Padding(
-              padding: const EdgeInsets.all(14.0),
+              padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -129,27 +129,35 @@ class ProductCard extends StatelessWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textDark,
-                      height: 1.3,
+                      height: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
-                      Text(
-                        "₹${product.currentPrice}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textDark,
+                      Flexible(
+                        child: Text(
+                          "₹${product.currentPrice}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textDark,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 6),
-                      Text(
-                        "₹${product.oldPrice}",
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textGrey,
-                          decoration: TextDecoration.lineThrough,
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          "₹${product.oldPrice}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textGrey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ),
                       ),
                     ],

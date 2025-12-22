@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../utils/app_colors.dart';
 import 'package:provider/provider.dart';
-import '../utils/theme_provider.dart';
+import '../providers/theme_provider.dart';
 
 class BubbleData {
   final double x;
