@@ -23,12 +23,9 @@ import 'testimonials_section.dart';
 import 'temple_jewellery_section.dart';
 import 'gold_scheme_section.dart';
 import 'designers_spotlight.dart';
-import 'newsletter_section.dart';
 import 'brand_marquee_section.dart';
 import 'community_gallery_section.dart';
-import 'faq_section.dart';
 import 'awards_section.dart';
-import 'footer_section.dart';
 import 'feature_carousel_section.dart';
 
 class HomeTab extends StatelessWidget {
@@ -91,16 +88,12 @@ class HomeTab extends StatelessWidget {
             const SizedBox(height: 8),
             TestimonialsSection(),
             const SizedBox(height: 12),
-            const NewsletterSection(),
-            const SizedBox(height: 12),
             const BrandMarqueeSection(),
             const SizedBox(height: 8),
             CommunityGallerySection(),
             const SizedBox(height: 8),
-            FaqSection(),
-            const SizedBox(height: 8),
             const AwardsSection(),
-            const FooterSection(),
+            const SizedBox(height: 50),
           ]),
         ),
       ),

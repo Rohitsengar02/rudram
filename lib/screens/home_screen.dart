@@ -218,34 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
       extendBody: true, // Content behind nav bar
       body: IndexedStack(index: _selectedIndex, children: _screens),
 
-      floatingActionButton: Container(
-        height: 60,
-        width: 60,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            colors: [AppColors.primaryOrange, Color(0xFFFF9F43)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primaryOrange.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: FloatingActionButton(
-          onPressed: () => _showMenuSlider(context),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, color: Colors.white, size: 30),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
       bottomNavigationBar: CustomBottomNavBar(
         selectedIndex: _selectedIndex,
         onTap: _onItemTapped,

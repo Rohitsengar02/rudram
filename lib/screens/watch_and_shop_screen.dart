@@ -7,6 +7,46 @@ class WatchAndShopScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // All 6 actual reels with their data
+    final List<ReelData> allReels = [
+      ReelData(
+        title: 'LISA Bulgari Mediterranea',
+        thumbnail:
+            'https://res.cloudinary.com/ds1wiqrdb/video/upload/so_0.0/v1765563533/LISA_Bulgari_Mediterranea_High_Jewelry_Collection_lnh1ks.jpg',
+        index: 0,
+      ),
+      ReelData(
+        title: 'Tanishq Diamonds Collection',
+        thumbnail:
+            'https://res.cloudinary.com/ds1wiqrdb/video/upload/so_0.0/v1765563533/Tanishq_Diamonds_Where_Rarity_Meets_Radiance_ruhfu7.jpg',
+        index: 1,
+      ),
+      ReelData(
+        title: 'Trending Gold Jhumka',
+        thumbnail:
+            'https://res.cloudinary.com/ds1wiqrdb/video/upload/so_0.0/v1765714763/TOP_TRENDING_GOLD_JEWELLERY_EARRINGS_JHUMKA_DESIGN_goldjewellery_jewelry_gold_jewellery_22k_okoq9c.jpg',
+        index: 2,
+      ),
+      ReelData(
+        title: 'Timeless Kasumala Collection',
+        thumbnail:
+            'https://res.cloudinary.com/ds1wiqrdb/video/upload/so_0.0/v1765714699/The_Timeless_Kasumala_Collection_Rivaah_Wedding_Jewellery_by_Tanishq_ajmdjv.jpg',
+        index: 3,
+      ),
+      ReelData(
+        title: 'Anne Hathaway Bulgari',
+        thumbnail:
+            'https://res.cloudinary.com/ds1wiqrdb/video/upload/so_0.0/v1765714691/Anne_Hathaway_Bulgari_Mediterranea_High_Jewelry_Collection_wcgszq.jpg',
+        index: 4,
+      ),
+      ReelData(
+        title: 'Zendaya Bulgari Collection',
+        thumbnail:
+            'https://res.cloudinary.com/ds1wiqrdb/video/upload/so_0.0/v1765714564/Zendaya_Bulgari_Mediterranea_High_Jewelry_Collection_jbwa8d.jpg',
+        index: 5,
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -25,7 +65,7 @@ class WatchAndShopScreen extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: Text(
-                "Curated Collections",
+                "Video Collections",
                 style: TextStyle(
                   fontSize: 28,
                   fontFamily: 'Playfair Display',
@@ -34,48 +74,21 @@ class WatchAndShopScreen extends StatelessWidget {
               ),
             ),
 
-            _buildCollectionCarousel(context, "Trending Now", [
-              _CollectionItem(
-                "Royal Wedding",
-                "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600",
-              ),
-              _CollectionItem(
-                "Diamond Gala",
-                "https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?w=600",
-              ),
-              _CollectionItem(
-                "Vintage Charm",
-                "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600",
-              ),
-            ]),
+            _buildReelCarousel(
+              context,
+              "Featured Reels",
+              allReels.sublist(0, 3),
+            ),
 
             const SizedBox(height: 32),
-            _buildCollectionCarousel(context, "New Arrivals", [
-              _CollectionItem(
-                "Summer Sparkle",
-                "https://images.unsplash.com/photo-1626177196020-f13110de832a?w=600",
-              ),
-              _CollectionItem(
-                "Gold Rush",
-                "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600",
-              ),
-              _CollectionItem(
-                "Platinum Edit",
-                "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600",
-              ),
-            ]),
+            _buildReelCarousel(
+              context,
+              "Celebrity Picks",
+              allReels.sublist(3, 6),
+            ),
 
             const SizedBox(height: 32),
-            _buildCollectionCarousel(context, "Editor's Picks", [
-              _CollectionItem(
-                "Statement Rings",
-                "https://images.unsplash.com/photo-1600080972464-8e5f35f63d88?w=600",
-              ),
-              _CollectionItem(
-                "Bridal Sets",
-                "https://images.unsplash.com/photo-1599643477877-53135397e209?w=600",
-              ),
-            ]),
+            _buildReelCarousel(context, "All Reels", allReels),
 
             const SizedBox(height: 50),
           ],
@@ -84,10 +97,10 @@ class WatchAndShopScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCollectionCarousel(
+  Widget _buildReelCarousel(
     BuildContext context,
     String title,
-    List<_CollectionItem> items,
+    List<ReelData> reels,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,11 +117,21 @@ class WatchAndShopScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Text(
-                "See all",
-                style: TextStyle(
-                  color: AppColors.primaryOrange,
-                  fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ReelsScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "See all",
+                  style: TextStyle(
+                    color: AppColors.primaryOrange,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -119,14 +142,16 @@ class WatchAndShopScreen extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: items.length,
+            itemCount: reels.length,
             itemBuilder: (context, index) {
+              final reel = reels[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ReelsScreen(),
+                      builder: (context) =>
+                          ReelsScreen(initialIndex: reel.index),
                     ),
                   );
                 },
@@ -148,7 +173,12 @@ class WatchAndShopScreen extends StatelessWidget {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.network(items[index].imageUrl, fit: BoxFit.cover),
+                        Image.network(
+                          reel.thumbnail,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(color: Colors.grey[300]),
+                        ),
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -166,12 +196,14 @@ class WatchAndShopScreen extends StatelessWidget {
                           left: 12,
                           right: 12,
                           child: Text(
-                            items[index].title,
+                            reel.title,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const Positioned(
@@ -196,8 +228,10 @@ class WatchAndShopScreen extends StatelessWidget {
   }
 }
 
-class _CollectionItem {
+class ReelData {
   final String title;
-  final String imageUrl;
-  _CollectionItem(this.title, this.imageUrl);
+  final String thumbnail;
+  final int index;
+
+  ReelData({required this.title, required this.thumbnail, required this.index});
 }

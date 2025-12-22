@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
+import '../screens/gift_guide_screen.dart';
 
 class GiftGuideSection extends StatelessWidget {
   const GiftGuideSection({super.key});
@@ -36,15 +37,34 @@ class GiftGuideSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Text(
-            "Gift Guide",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Gift Guide",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textDark,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GiftGuideScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "See All",
+                  style: TextStyle(color: AppColors.primaryOrange),
+                ),
+              ),
+            ],
           ),
         ),
         SizedBox(
@@ -54,43 +74,53 @@ class GiftGuideSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: gifts.length,
             itemBuilder: (context, index) {
-              return Container(
-                width: 140,
-                margin: const EdgeInsets.only(right: 12),
-                decoration: BoxDecoration(
-                  color: gifts[index]['color'] as Color,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(16),
-                        ),
-                        child: Image.network(
-                          gifts[index]['image'] as String,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.card_giftcard),
-                        ),
-                      ),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GiftGuideScreen(),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: Text(
-                          gifts[index]['title'] as String,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                  );
+                },
+                child: Container(
+                  width: 140,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    color: gifts[index]['color'] as Color,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16),
+                          ),
+                          child: Image.network(
+                            gifts[index]['image'] as String,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.card_giftcard),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Text(
+                            gifts[index]['title'] as String,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

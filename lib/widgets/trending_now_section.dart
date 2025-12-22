@@ -13,7 +13,7 @@ class TrendingNowSection extends StatelessWidget {
       oldPrice: 95000,
       discount: "18% Off",
       image:
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg",
       bgColor: const Color(0xFFFFD700),
     ),
     ProductItem(
@@ -22,7 +22,7 @@ class TrendingNowSection extends StatelessWidget {
       oldPrice: 55000,
       discount: "18% Off",
       image:
-          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg",
       bgColor: const Color(0xFFFF69B4),
     ),
     ProductItem(
@@ -31,7 +31,7 @@ class TrendingNowSection extends StatelessWidget {
       oldPrice: 42000,
       discount: "17% Off",
       image:
-          "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg",
       bgColor: const Color(0xFF87CEEB),
     ),
   ];

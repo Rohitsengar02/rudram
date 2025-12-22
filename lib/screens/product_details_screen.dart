@@ -61,15 +61,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     ),
   ];
 
-  final List<ProductItem> _similar = List.generate(
+  final List<String> _similarImages = [
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg",
+  ];
+
+  late final List<ProductItem> _similar = List.generate(
     5,
     (i) => ProductItem(
       title: "Elegant Ring $i",
       currentPrice: 12000 + (i * 500),
       oldPrice: 15000,
       discount: "10%",
-      image:
-          "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=300",
+      image: _similarImages[i % _similarImages.length],
       bgColor: Colors.white,
     ),
   );
@@ -81,11 +88,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
     _images = [
       widget.product.image.isNotEmpty
           ? widget.product.image
-          : "https://images.unsplash.com/photo-1599643478518-17488fbbcd75?w=500",
-      "https://images.unsplash.com/photo-1617038224558-28ad3fb558a7?w=500",
-      "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?w=500",
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500",
-      "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?w=500",
+          : "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
+      "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg",
+      "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg",
+      "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg",
+      "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
     ];
   }
 

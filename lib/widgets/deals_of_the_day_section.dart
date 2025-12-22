@@ -22,7 +22,7 @@ class _DealsOfTheDaySectionState extends State<DealsOfTheDaySection> {
       oldPrice: 78000,
       discount: "29% Off",
       image:
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg",
       bgColor: const Color(0xFFDC143C), // Crimson
     ),
     ProductItem(
@@ -31,7 +31,7 @@ class _DealsOfTheDaySectionState extends State<DealsOfTheDaySection> {
       oldPrice: 189000,
       discount: "23% Off",
       image:
-          "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
       bgColor: const Color(0xFF0F52BA), // Sapphire
     ),
     ProductItem(
@@ -40,7 +40,7 @@ class _DealsOfTheDaySectionState extends State<DealsOfTheDaySection> {
       oldPrice: 155000,
       discount: "19% Off",
       image:
-          "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg",
       bgColor: const Color(0xFFDAA520), // Goldenrod
     ),
   ];

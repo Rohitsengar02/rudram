@@ -13,7 +13,7 @@ class FlashSaleSection extends StatelessWidget {
       oldPrice: 99000,
       discount: "8% Off",
       image:
-          "https://www.kindpng.com/picc/m/3-30881_transparent-gold-necklace-png-transparent-background-jewelry-png.png",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
       bgColor: const Color(0xFFFFD700), // Gold color
     ),
     ProductItem(
@@ -22,7 +22,7 @@ class FlashSaleSection extends StatelessWidget {
       oldPrice: 139900,
       discount: "12% Off",
       image:
-          "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg",
       bgColor: const Color(0xFFC0C0C0), // Silver color
     ),
     ProductItem(
@@ -31,7 +31,7 @@ class FlashSaleSection extends StatelessWidget {
       oldPrice: 89900,
       discount: "8% Off",
       image:
-          "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg",
       bgColor: const Color(0xFFDAA520), // Goldenrod
     ),
   ];

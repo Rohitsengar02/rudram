@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
+import '../screens/community_screen.dart';
+import '../screens/upload_your_look_screen.dart';
 
 class CommunityGallerySection extends StatelessWidget {
   const CommunityGallerySection({super.key});
@@ -8,12 +10,12 @@ class CommunityGallerySection extends StatelessWidget {
   Widget build(BuildContext context) {
     // 6 images for gallery
     final images = [
-      'https://images.unsplash.com/photo-1596919796030-ea5c4fa10688?w=300',
-      'https://images.unsplash.com/photo-1585123380276-88b13c32e303?w=300',
-      'https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?w=300',
-      'https://images.unsplash.com/photo-1616091216791-a5360b5fc78a?w=300',
-      'https://images.unsplash.com/photo-1606293926075-69a00fb03689?w=300',
-      'https://images.unsplash.com/photo-1601055283738-f938d227b6b1?w=300',
+      'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg',
+      'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg',
+      'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg',
+      'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg',
+      'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg',
+      'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg',
     ];
 
     return Column(
@@ -24,29 +26,49 @@ class CommunityGallerySection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "#RudramCommunity",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CommunityScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "#RudramCommunity",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                  ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryOrange.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  "Upload Your Look",
-                  style: TextStyle(
-                    color: AppColors.primaryOrange,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UploadYourLookScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryOrange.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    "Upload Your Look",
+                    style: TextStyle(
+                      color: AppColors.primaryOrange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
@@ -60,16 +82,26 @@ class CommunityGallerySection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemCount: images.length,
             itemBuilder: (context, index) {
-              return Container(
-                width: 150,
-                margin: const EdgeInsets.only(right: 12),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    images[index],
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Container(color: Colors.grey[300]),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CommunityScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 150,
+                  margin: const EdgeInsets.only(right: 12),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      images[index],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Container(color: Colors.grey[300]),
+                    ),
                   ),
                 ),
               );

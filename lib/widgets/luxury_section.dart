@@ -11,19 +11,19 @@ class LuxurySection extends StatelessWidget {
         'title': 'Diamond Solitaire',
         'price': '₹4,50,000',
         'image':
-            'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500',
+            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg',
       },
       {
         'title': 'Platinum Band',
         'price': '₹3,25,000',
         'image':
-            'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500',
+            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg',
       },
       {
         'title': 'Emerald Necklace',
         'price': '₹5,75,000',
         'image':
-            'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500',
+            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg',
       },
     ];
 

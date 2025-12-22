@@ -15,9 +15,9 @@ class _LuxuryProductDetailsScreenState
   int _currentImageIndex = 0;
 
   final List<String> _images = [
-    "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800",
-    "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800",
-    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg",
   ];
 
   @override

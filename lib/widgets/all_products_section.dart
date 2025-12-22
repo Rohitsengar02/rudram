@@ -5,15 +5,25 @@ import '../utils/app_colors.dart';
 class AllProductsSection extends StatelessWidget {
   AllProductsSection({super.key});
 
-  final List<ProductItem> products = List.generate(10, (index) {
+  final List<String> _productImages = [
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg",
+  ];
+
+  late final List<ProductItem> products = List.generate(12, (index) {
+    String image = _productImages[index % _productImages.length];
+
     if (index % 4 == 0) {
       return ProductItem(
         title: "Gold Necklace Design $index",
         currentPrice: 45000 + (index * 1000),
         oldPrice: 50000 + (index * 1000),
         discount: "10% Off",
-        image:
-            "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500",
+        image: image,
         bgColor: const Color(0xFFFFD700),
       );
     } else if (index % 4 == 1) {
@@ -22,8 +32,7 @@ class AllProductsSection extends StatelessWidget {
         currentPrice: 85000 + (index * 2000),
         oldPrice: 95000 + (index * 2000),
         discount: "12% Off",
-        image:
-            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500",
+        image: image,
         bgColor: const Color(0xFFC0C0C0),
       );
     } else if (index % 4 == 2) {
@@ -32,8 +41,7 @@ class AllProductsSection extends StatelessWidget {
         currentPrice: 25000 + (index * 500),
         oldPrice: 30000 + (index * 500),
         discount: "15% Off",
-        image:
-            "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500",
+        image: image,
         bgColor: const Color(0xFFFFF8DC),
       );
     } else {
@@ -42,8 +50,7 @@ class AllProductsSection extends StatelessWidget {
         currentPrice: 65000 + (index * 1500),
         oldPrice: 75000 + (index * 1500),
         discount: "8% Off",
-        image:
-            "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500",
+        image: image,
         bgColor: const Color(0xFFDAA520),
       );
     }

@@ -26,14 +26,12 @@ class _LuxuryHomeContentState extends State<LuxuryHomeContent> {
   ];
 
   final List<String> _jewelImages = [
-    "https://images.unsplash.com/photo-1626177196020-f13110de832a?w=400",
-    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400",
-    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400",
-    "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=400",
-    "https://images.unsplash.com/photo-1599643477877-53135397e209?w=400",
-    "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400",
-    "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=400",
-    "https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?w=400",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/4_a7e9t3.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg",
+    "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/1_x3dvkl.jpg",
   ];
 
   @override

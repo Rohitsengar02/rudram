@@ -13,7 +13,7 @@ class BestSellersSection extends StatelessWidget {
       oldPrice: 289000,
       discount: "15% Off",
       image:
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg",
       bgColor: const Color(0xFFB8860B), // Dark goldenrod
     ),
     ProductItem(
@@ -22,7 +22,7 @@ class BestSellersSection extends StatelessWidget {
       oldPrice: 195000,
       discount: "15% Off",
       image:
-          "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
       bgColor: const Color(0xFFCD7F32), // Bronze
     ),
     ProductItem(
@@ -31,7 +31,7 @@ class BestSellersSection extends StatelessWidget {
       oldPrice: 105000,
       discount: "15% Off",
       image:
-          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500",
+          "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
       bgColor: const Color(0xFF50C878), // Emerald
     ),
   ];

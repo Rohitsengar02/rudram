@@ -5,20 +5,118 @@ import '../utils/app_colors.dart';
 import 'luxury_product_details_screen.dart';
 
 class ReelsScreen extends StatefulWidget {
-  const ReelsScreen({super.key});
+  final int initialIndex;
+  const ReelsScreen({super.key, this.initialIndex = 0});
 
   @override
   State<ReelsScreen> createState() => _ReelsScreenState();
 }
 
 class _ReelsScreenState extends State<ReelsScreen> {
-  final PageController _pageController = PageController();
-  // Removed audio permission logic as requested. Audio is on by default.
-
+  late PageController _pageController;
   final List<String> _videoUrls = [
     "https://res.cloudinary.com/ds1wiqrdb/video/upload/v1765563533/LISA_Bulgari_Mediterranea_High_Jewelry_Collection_lnh1ks.mp4",
     "https://res.cloudinary.com/ds1wiqrdb/video/upload/v1765563533/Tanishq_Diamonds_Where_Rarity_Meets_Radiance_ruhfu7.mp4",
+    "https://res.cloudinary.com/ds1wiqrdb/video/upload/v1765714763/TOP_TRENDING_GOLD_JEWELLERY_EARRINGS_JHUMKA_DESIGN_goldjewellery_jewelry_gold_jewellery_22k_okoq9c.mp4",
+    "https://res.cloudinary.com/ds1wiqrdb/video/upload/v1765714699/The_Timeless_Kasumala_Collection_Rivaah_Wedding_Jewellery_by_Tanishq_ajmdjv.mp4",
+    "https://res.cloudinary.com/ds1wiqrdb/video/upload/v1765714691/Anne_Hathaway_Bulgari_Mediterranea_High_Jewelry_Collection_wcgszq.mp4",
+    "https://res.cloudinary.com/ds1wiqrdb/video/upload/v1765714564/Zendaya_Bulgari_Mediterranea_High_Jewelry_Collection_jbwa8d.mp4",
   ];
+
+  // Cache controllers: Key is the page index
+  final Map<int, VideoPlayerController> _controllers = {};
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentPage = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+
+    // Initialize first few reels
+    _initializeControllerAtIndex(_currentPage);
+    _initializeControllerAtIndex(_currentPage + 1);
+    _initializeControllerAtIndex(_currentPage + 2);
+    _playControllerAtIndex(_currentPage);
+  }
+
+  void _initializeControllerAtIndex(int index) async {
+    if (_controllers.containsKey(index)) return;
+
+    final url = _videoUrls[index % _videoUrls.length];
+    final controller = VideoPlayerController.networkUrl(Uri.parse(url));
+
+    _controllers[index] = controller;
+
+    // Initialize without blocking
+    await controller.initialize();
+    controller.setLooping(true);
+    // Ensure UI rebuilds when init completes
+    if (mounted) setState(() {});
+  }
+
+  void _playControllerAtIndex(int index) {
+    final controller = _controllers[index];
+    if (controller != null && controller.value.isInitialized) {
+      controller.play();
+    } else {
+      // If not ready, it will auto-play when rebuilt with initialized state
+      // or we can add a listener. For now, simple check.
+      controller?.addListener(() {
+        if (controller.value.isInitialized &&
+            !_controllers[index]!.value.isPlaying &&
+            _currentPage == index) {
+          controller.play();
+        }
+      });
+    }
+  }
+
+  void _stopControllerAtIndex(int index) {
+    final controller = _controllers[index];
+    if (controller != null && controller.value.isPlaying) {
+      controller.pause();
+    }
+  }
+
+  void _disposeControllerAtIndex(int index) {
+    if (_controllers.containsKey(index)) {
+      _controllers[index]?.dispose();
+      _controllers.remove(index);
+    }
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentPage = index;
+    });
+
+    // 1. Play current
+    _playControllerAtIndex(index);
+
+    // 2. Stop previous
+    _stopControllerAtIndex(index - 1);
+    // Also stop next if we swiped back
+    _stopControllerAtIndex(index + 1);
+
+    // 3. Preload next 2 reels
+    _initializeControllerAtIndex(index + 1);
+    _initializeControllerAtIndex(index + 2);
+
+    // 4. Dispose far previous (keep immediate previous for smooth back swipe)
+    _disposeControllerAtIndex(index - 2);
+    // Dispose far next (if user jumped or swiped fast backwards)
+    _disposeControllerAtIndex(index + 3);
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +125,19 @@ class _ReelsScreenState extends State<ReelsScreen> {
       body: PageView.builder(
         scrollDirection: Axis.vertical,
         controller: _pageController,
-        // Infinite scrolling
+        onPageChanged: _onPageChanged,
         itemBuilder: (context, index) {
-          final url = _videoUrls[index % _videoUrls.length];
-          // Pass startMuted: false for automatic audio
-          return ReelPlayerItem(videoUrl: url, startMuted: false);
+          // Ensure controller exists (fallback if fast scroll)
+          if (!_controllers.containsKey(index)) {
+            _initializeControllerAtIndex(index);
+          }
+
+          return ReelPlayerItem(
+            // Key is important to preserve state
+            key: ValueKey(index),
+            controller: _controllers[index],
+            videoUrl: _videoUrls[index % _videoUrls.length],
+          );
         },
       ),
     );
@@ -39,56 +145,29 @@ class _ReelsScreenState extends State<ReelsScreen> {
 }
 
 class ReelPlayerItem extends StatefulWidget {
+  final VideoPlayerController? controller;
   final String videoUrl;
-  final bool startMuted;
 
-  const ReelPlayerItem({
-    super.key,
-    required this.videoUrl,
-    required this.startMuted,
-  });
+  const ReelPlayerItem({super.key, this.controller, required this.videoUrl});
 
   @override
   State<ReelPlayerItem> createState() => _ReelPlayerItemState();
 }
 
 class _ReelPlayerItemState extends State<ReelPlayerItem> {
-  late VideoPlayerController _controller;
-  bool _initialized = false;
   bool _isMuted = false;
 
   @override
   void initState() {
     super.initState();
-    _isMuted = widget.startMuted;
-
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-      ..initialize()
-          .then((_) {
-            if (mounted) {
-              setState(() {
-                _initialized = true;
-                _controller.setLooping(true);
-                _controller.setVolume(_isMuted ? 0.0 : 1.0);
-                _controller.play();
-              });
-            }
-          })
-          .catchError((error) {
-            debugPrint("Video Error: $error");
-          });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    // Use the controller's volume state if available, or default
+    _isMuted = widget.controller?.value.volume == 0;
   }
 
   void _toggleMute() {
     setState(() {
       _isMuted = !_isMuted;
-      _controller.setVolume(_isMuted ? 0.0 : 1.0);
+      widget.controller?.setVolume(_isMuted ? 0.0 : 1.0);
     });
   }
 
@@ -105,25 +184,29 @@ class _ReelPlayerItemState extends State<ReelPlayerItem> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = widget.controller;
+    final isInitialized = controller != null && controller.value.isInitialized;
+
     return Stack(
       fit: StackFit.expand,
       children: [
         // Video
-        _initialized
+        isInitialized
             ? GestureDetector(
                 onTap: () {
-                  setState(() {
-                    _controller.value.isPlaying
-                        ? _controller.pause()
-                        : _controller.play();
-                  });
+                  if (controller.value.isPlaying) {
+                    controller.pause();
+                  } else {
+                    controller.play();
+                  }
+                  setState(() {});
                 },
                 child: FittedBox(
                   fit: BoxFit.cover,
                   child: SizedBox(
-                    width: _controller.value.size.width,
-                    height: _controller.value.size.height,
-                    child: VideoPlayer(_controller),
+                    width: controller.value.size.width,
+                    height: controller.value.size.height,
+                    child: VideoPlayer(controller),
                   ),
                 ),
               )
@@ -133,7 +216,7 @@ class _ReelPlayerItemState extends State<ReelPlayerItem> {
                 ),
               ),
 
-        if (_initialized && !_controller.value.isPlaying)
+        if (isInitialized && !controller.value.isPlaying)
           const Center(
             child: Icon(
               Icons.play_circle_outline,
@@ -158,7 +241,7 @@ class _ReelPlayerItemState extends State<ReelPlayerItem> {
         ),
 
         // Mute Toggle Icon
-        if (_initialized)
+        if (isInitialized)
           Positioned(
             top: 40,
             right: 16,
