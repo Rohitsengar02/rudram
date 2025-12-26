@@ -1,7 +1,14 @@
 #!/bin/bash
 
-echo "Cloning Flutter SDK..."
-git clone https://github.com/flutter/flutter.git -b stable --depth 1 flutter
+if [ -d "flutter" ]; then
+  echo "Flutter directory exists, pulling latest..."
+  cd flutter
+  git pull
+  cd ..
+else
+  echo "Cloning Flutter SDK..."
+  git clone https://github.com/flutter/flutter.git -b stable --depth 1 flutter
+fi
 export PATH="$PATH:`pwd`/flutter/bin"
 
 echo "Flutter Version:"
