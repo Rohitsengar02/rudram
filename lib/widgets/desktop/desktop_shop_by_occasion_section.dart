@@ -17,52 +17,64 @@ class _DesktopShopByOccasionSectionState
 
   final List<Map<String, String>> occasions = [
     {
-      'title': 'Wedding',
-      'subtitle': 'Find the perfect ensemble for special celebrations',
+      'title': 'Wedding Bliss',
+      'subtitle': 'Timeless jewelry for your most precious day',
       'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/c2/26/c5/c226c52a37a7bdc54e3e2d7198e63d38.jpg',
+      'fallback':
           'https://images.unsplash.com/photo-1519741497674-611481863552?w=600',
     },
     {
-      'title': 'Birthday Party',
-      'subtitle': 'Celebrate in style with trendy outfits',
+      'title': 'Office Elegance',
+      'subtitle': 'Sophisticated pieces for the modern professional',
       'image':
-          'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600',
-    },
-    {
-      'title': 'Casual Wear',
-      'subtitle': 'Comfortable styles for everyday life',
-      'image':
-          'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',
-    },
-    {
-      'title': 'Formal Events',
-      'subtitle': 'Look professional and polished',
-      'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/32/18/5a/32185add0e18326767babc35989ca597.jpg',
+      'fallback':
           'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600',
     },
     {
-      'title': 'Beach Party',
-      'subtitle': 'Summer vibes and breezy outfits',
+      'title': 'Festive Glamour',
+      'subtitle': 'Sparkle bright at every celebration',
       'image':
-          'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600',
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/e9/f2/9b/e9f29b0d985c7ca6b6f20511208c70ba.jpg',
+      'fallback':
+          'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600',
     },
     {
-      'title': 'Date Night',
-      'subtitle': 'Romantic and elegant styles',
+      'title': 'Daily Radiance',
+      'subtitle': 'Effortless styles for everyday shine',
       'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/61/33/01/613301a1c0d852afbc11ebdd05378ffa.jpg',
+      'fallback':
+          'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',
+    },
+    {
+      'title': 'Romantic Evenings',
+      'subtitle': 'Captivating pieces for a night to remember',
+      'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/4f/85/0a/4f850a1ee846ce2aed611b34af7936e0.jpg',
+      'fallback':
           'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600',
+    },
+    {
+      'title': 'Special Celebrations',
+      'subtitle': 'Celebrate life milestones with elegance',
+      'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/7c/e0/1a/7ce01ad769397f179b6285de920fe351.jpg',
+      'fallback':
+          'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600',
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 15),
+      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 10),
       child: Column(
         children: [
           // Header
           Padding(
-            padding: const EdgeInsets.only(bottom: 30),
+            padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -79,7 +91,7 @@ class _DesktopShopByOccasionSectionState
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "Perfect styles for every moment",
+                      "Find the perfect jewelry for every moment",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade600,
@@ -104,17 +116,15 @@ class _DesktopShopByOccasionSectionState
             ),
           ),
 
-          // Carousel
+          // Carousel showing 4 items at once
           CarouselSlider.builder(
             carouselController: _carouselController,
-            itemCount: (occasions.length / 3).ceil(),
+            itemCount: (occasions.length / 4).ceil(),
             options: CarouselOptions(
-              height: 400,
+              height: 450,
               viewportFraction: 1.0,
               enableInfiniteScroll: true,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 5),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              autoPlay: false,
               onPageChanged: (index, reason) {
                 setState(() {
                   _current = index;
@@ -122,32 +132,40 @@ class _DesktopShopByOccasionSectionState
               },
             ),
             itemBuilder: (context, pageIndex, realIndex) {
-              final startIdx = pageIndex * 3;
+              final startIdx = pageIndex * 4;
               final itemsInPage = <Map<String, String>>[];
 
-              for (int i = 0; i < 3 && startIdx + i < occasions.length; i++) {
+              for (int i = 0; i < 4 && startIdx + i < occasions.length; i++) {
                 itemsInPage.add(occasions[startIdx + i]);
               }
 
               return Row(
-                children: itemsInPage.map((occasion) {
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: _OccasionCard(occasion: occasion),
+                children: [
+                  ...itemsInPage.map((occasion) {
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: _OccasionCard(occasion: occasion),
+                      ),
+                    );
+                  }),
+                  // Spacer for last page if items < 4
+                  if (itemsInPage.length < 4)
+                    ...List.generate(
+                      4 - itemsInPage.length,
+                      (index) => const Expanded(child: SizedBox()),
                     ),
-                  );
-                }).toList(),
+                ],
               );
             },
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 30),
 
           // Indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate((occasions.length / 3).ceil(), (index) {
+            children: List.generate((occasions.length / 4).ceil(), (index) {
               return GestureDetector(
                 onTap: () => _carouselController.animateToPage(index),
                 child: AnimatedContainer(
@@ -158,7 +176,7 @@ class _DesktopShopByOccasionSectionState
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
                     color: _current == index
-                        ? const Color(0xFFE91E63)
+                        ? const Color(0xFF4F46E5)
                         : Colors.grey.shade300,
                   ),
                 ),
@@ -217,22 +235,21 @@ class _OccasionCardState extends State<_OccasionCard> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        transform: Matrix4.identity()
-          ..translate(0.0, _isHovered ? -10.0 : 0.0)
-          ..scale(_isHovered ? 1.03 : 1.0),
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOutCubic,
+        transform: Matrix4.identity()..translate(0.0, _isHovered ? -15.0 : 0.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(_isHovered ? 0.2 : 0.08),
-              blurRadius: _isHovered ? 25 : 15,
-              offset: Offset(0, _isHovered ? 15 : 8),
+              color: Colors.black.withOpacity(_isHovered ? 0.15 : 0.05),
+              blurRadius: _isHovered ? 30 : 15,
+              offset: Offset(0, _isHovered ? 20 : 10),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -241,25 +258,23 @@ class _OccasionCardState extends State<_OccasionCard> {
                 widget.occasion['image']!,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey.shade200,
-                    child: const Center(
-                      child: Icon(Icons.image, size: 50, color: Colors.grey),
-                    ),
+                  return Image.network(
+                    widget.occasion['fallback']!,
+                    fit: BoxFit.cover,
                   );
                 },
               ),
 
               // Gradient Overlay
               AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 400),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(_isHovered ? 0.8 : 0.65),
+                      Colors.black.withOpacity(_isHovered ? 0.75 : 0.4),
                     ],
                   ),
                 ),
@@ -277,48 +292,28 @@ class _OccasionCardState extends State<_OccasionCard> {
                       widget.occasion['title']!,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 26,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 0.5,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      widget.occasion['subtitle']!,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
-                        height: 1.4,
+                    AnimatedOpacity(
+                      duration: const Duration(milliseconds: 300),
+                      opacity: _isHovered ? 1.0 : 0.8,
+                      child: Text(
+                        widget.occasion['subtitle']!,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 13,
+                          height: 1.4,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    if (_isHovered) ...[
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE91E63),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          "EXPLORE",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ),
-                    ],
+                    const SizedBox(height: 15),
+                    _buildExploreButton(),
                   ],
                 ),
               ),
@@ -329,13 +324,42 @@ class _OccasionCardState extends State<_OccasionCard> {
                 child: InkWell(
                   onTap: () {},
                   splashColor: Colors.white.withOpacity(0.2),
-                  highlightColor: Colors.white.withOpacity(0.1),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildExploreButton() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: _isHovered ? 120 : 0,
+      height: 36,
+      child: _isHovered
+          ? ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                padding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                "EXPLORE",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            )
+          : const SizedBox.shrink(),
     );
   }
 }

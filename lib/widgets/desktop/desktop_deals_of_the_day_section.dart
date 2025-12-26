@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../models/data_models.dart';
-import '../quick_view_dialog.dart';
+import '../../screens/desktop/desktop_product_detail_page.dart';
 import 'dart:async';
 
 class DesktopDealsOfTheDaySection extends StatefulWidget {
@@ -16,7 +16,6 @@ class _DesktopDealsOfTheDaySectionState
     extends State<DesktopDealsOfTheDaySection> {
   final CarouselSliderController _carouselController =
       CarouselSliderController();
-  int _current = 0;
 
   // Countdown timer
   late Timer _timer;
@@ -36,215 +35,175 @@ class _DesktopDealsOfTheDaySectionState
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_timeRemaining.inSeconds > 0) {
-          _timeRemaining = Duration(seconds: _timeRemaining.inSeconds - 1);
-        } else {
-          _timeRemaining = const Duration(hours: 23, minutes: 59, seconds: 59);
-        }
-      });
+      if (mounted) {
+        setState(() {
+          if (_timeRemaining.inSeconds > 0) {
+            _timeRemaining = Duration(seconds: _timeRemaining.inSeconds - 1);
+          } else {
+            _timeRemaining = const Duration(
+              hours: 23,
+              minutes: 59,
+              seconds: 59,
+            );
+          }
+        });
+      }
     });
   }
 
-  final List<ProductItem> deals = [
+  final List<ProductItem> products = [
     ProductItem(
-      title: "Premium Leather Bag",
-      currentPrice: 2499.00,
-      oldPrice: 4999.00,
-      discount: "-50%",
-      image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500",
-      bgColor: const Color(0xFFF5F5F5),
-    ),
-    ProductItem(
-      title: "Wireless Gaming Mouse",
-      currentPrice: 1299.00,
-      oldPrice: 2599.00,
-      discount: "-50%",
+      title: "Royal Emerald Diamond Set",
+      currentPrice: 85000.00,
+      oldPrice: 125000.00,
+      discount: "-32%",
       image:
-          "https://images.unsplash.com/photo-1527814050087-3793815479db?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/6a/55/96/6a55960bc89259fa0cc11bf784e1d28c.jpg",
     ),
     ProductItem(
-      title: "Smart LED Bulb Pack",
-      currentPrice: 899.00,
-      oldPrice: 1799.00,
-      discount: "-50%",
-      image: "https://images.unsplash.com/photo-1550985616-10810253b84d?w=500",
-      bgColor: const Color(0xFFF5F5F5),
-    ),
-    ProductItem(
-      title: "Yoga Mat Premium",
-      currentPrice: 599.00,
-      oldPrice: 1199.00,
-      discount: "-50%",
+      title: "Sapphire Drop Earrings",
+      currentPrice: 42000.00,
+      oldPrice: 55000.00,
+      discount: "-25%",
       image:
-          "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/f4/05/41/f4054166dccbf42baf55d8501074b012.jpg",
     ),
     ProductItem(
-      title: "Stainless Steel Water Bottle",
-      currentPrice: 399.00,
-      oldPrice: 799.00,
-      discount: "-50%",
+      title: "Infinity Gold Bracelet",
+      currentPrice: 35000.00,
+      oldPrice: 45000.00,
+      discount: "-22%",
       image:
-          "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/c3/8e/3e/c38e3e93d6d993c115314b20274943fa.jpg",
+    ),
+    ProductItem(
+      title: "Classic Solitaire Ring",
+      currentPrice: 95000.00,
+      oldPrice: 110000.00,
+      discount: "-15%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/0f/5f/1a/0f5f1a0cc6a898a8b23e72fb2b1a087f.jpg",
+    ),
+    ProductItem(
+      title: "Rose Gold Pendant",
+      currentPrice: 28000.00,
+      oldPrice: 35000.00,
+      discount: "-20%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/36/dc/71/36dc71af1ca7f5c4a8fdfe73bbb688b1.jpg",
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 15),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.orange.shade50, Colors.white],
-        ),
-      ),
-      child: Column(
-        children: [
-          // Header with Timer
-          Padding(
-            padding: const EdgeInsets.only(bottom: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          "Deals of the Day",
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E2832),
-                          ),
+    return Column(
+      children: [
+        // Header with Timer
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        "Deals of the Day",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E2832),
                         ),
-                        const SizedBox(width: 16),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFFF6B00), Color(0xFFFF8E00)],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.flash_on,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                "${_timeRemaining.inHours.toString().padLeft(2, '0')}:${(_timeRemaining.inMinutes % 60).toString().padLeft(2, '0')}:${(_timeRemaining.inSeconds % 60).toString().padLeft(2, '0')}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFeatures: [FontFeature.tabularFigures()],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "Limited time offers - Grab them before they're gone!",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade600,
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    _buildNavButton(
-                      icon: Icons.chevron_left,
-                      onTap: () => _carouselController.previousPage(),
-                    ),
-                    const SizedBox(width: 10),
-                    _buildNavButton(
-                      icon: Icons.chevron_right,
-                      onTap: () => _carouselController.nextPage(),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                      const SizedBox(width: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFF6B00), Color(0xFFFF8E00)],
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.flash_on,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              "${_timeRemaining.inHours.toString().padLeft(2, '0')}:${(_timeRemaining.inMinutes % 60).toString().padLeft(2, '0')}:${(_timeRemaining.inSeconds % 60).toString().padLeft(2, '0')}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Limited time offers on our exquisite jewelry",
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildNavButton(
+                    icon: Icons.chevron_left,
+                    onTap: () => _carouselController.previousPage(),
+                  ),
+                  const SizedBox(width: 10),
+                  _buildNavButton(
+                    icon: Icons.chevron_right,
+                    onTap: () => _carouselController.nextPage(),
+                  ),
+                ],
+              ),
+            ],
           ),
+        ),
 
-          // Carousel
-          CarouselSlider.builder(
-            carouselController: _carouselController,
-            itemCount: (deals.length / 4).ceil(),
-            options: CarouselOptions(
-              height: 420,
-              viewportFraction: 1.0,
-              enableInfiniteScroll: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              },
-            ),
-            itemBuilder: (context, pageIndex, realIndex) {
-              final startIdx = pageIndex * 4;
-              final itemsInPage = <ProductItem>[];
-
-              for (int i = 0; i < 4 && startIdx + i < deals.length; i++) {
-                itemsInPage.add(deals[startIdx + i]);
-              }
-
-              return Row(
-                children: itemsInPage.map((deal) {
+        // Carousel content
+        CarouselSlider.builder(
+          carouselController: _carouselController,
+          itemCount: (products.length / 5).ceil(),
+          options: CarouselOptions(
+            height: 380,
+            viewportFraction: 1.0,
+            enableInfiniteScroll: true,
+            autoPlay: false,
+          ),
+          itemBuilder: (context, index, realIndex) {
+            final int start = index * 5;
+            return Row(
+              children: List.generate(5, (i) {
+                final int currentIdx = start + i;
+                if (currentIdx < products.length) {
                   return Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: _DealCard(product: deal),
+                      padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
+                      child: _DealCard(product: products[currentIdx]),
                     ),
                   );
-                }).toList(),
-              );
-            },
-          ),
-
-          const SizedBox(height: 24),
-
-          // Indicators
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate((deals.length / 4).ceil(), (index) {
-              return GestureDetector(
-                onTap: () => _carouselController.animateToPage(index),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: _current == index ? 32 : 8,
-                  height: 8,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: _current == index
-                        ? const Color(0xFFFF6B00)
-                        : Colors.grey.shade300,
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
+                } else {
+                  return const Expanded(child: SizedBox());
+                }
+              }),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -290,153 +249,108 @@ class _DealCardState extends State<_DealCard> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        transform: Matrix4.identity()..translate(0.0, _isHovered ? -10.0 : 0.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: _isHovered ? const Color(0xFFFF6B00) : Colors.grey.shade200,
-            width: 2,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                DesktopProductDetailPage(product: widget.product),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(_isHovered ? 0.15 : 0.05),
-              blurRadius: _isHovered ? 20 : 10,
-              offset: Offset(0, _isHovered ? 10 : 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image Section
-            Stack(
-              children: [
-                Container(
-                  height: 240,
+        );
+      },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            children: [
+              // Image Box
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
-                    color: widget.product.bgColor,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(14),
-                      topRight: Radius.circular(14),
-                    ),
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(14),
-                      topRight: Radius.circular(14),
-                    ),
-                    child: Image.network(
-                      widget.product.image,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                // Discount Badge
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFFF6B00), Color(0xFFFF8E00)],
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      widget.product.discount,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                // Quick View
-                if (_isHovered)
-                  Positioned(
-                    bottom: 12,
-                    right: 12,
-                    child: GestureDetector(
-                      onTap: () => showQuickViewDialog(context, widget.product),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.remove_red_eye_outlined,
-                          size: 20,
-                          color: Color(0xFF1E2832),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-
-            // Product Details
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.product.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1E2832),
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
+                  child: Stack(
                     children: [
-                      Text(
-                        "₹${widget.product.currentPrice.toStringAsFixed(0)}",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFFF6B00),
-                        ),
+                      Image.network(
+                        widget.product.image,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
+                              child: Icon(Icons.image_outlined, size: 40),
+                            ),
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        "₹${widget.product.oldPrice.toStringAsFixed(0)}",
-                        style: TextStyle(
-                          fontSize: 14,
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey.shade400,
+                      if (_isHovered)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
                         ),
-                      ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 15),
+              // Product Info
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.product.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${widget.product.currentPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.product.discount,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF4F46E5),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "₹${widget.product.oldPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            decoration: TextDecoration.lineThrough,
+                            color: Color(0xFFBDBDBD),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

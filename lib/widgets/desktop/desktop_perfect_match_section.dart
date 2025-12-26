@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'desktop_product_card.dart';
 import '../../models/data_models.dart';
+import '../../screens/desktop/desktop_product_detail_page.dart';
 
 class DesktopPerfectMatchSection extends StatefulWidget {
   const DesktopPerfectMatchSection({super.key});
@@ -15,211 +15,157 @@ class _DesktopPerfectMatchSectionState
     extends State<DesktopPerfectMatchSection> {
   final CarouselSliderController _carouselController =
       CarouselSliderController();
-  int _current = 0;
 
   final List<ProductItem> products = [
     ProductItem(
-      title: "Minimalist Watch",
-      currentPrice: 1999.00,
-      oldPrice: 3999.00,
-      discount: "-50%",
+      title: "Royal Emerald Diamond Set",
+      currentPrice: 85000.00,
+      oldPrice: 125000.00,
+      discount: "-32%",
       image:
-          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/6a/55/96/6a55960bc89259fa0cc11bf784e1d28c.jpg",
     ),
     ProductItem(
-      title: "Designer Sunglasses",
-      currentPrice: 1499.00,
-      oldPrice: 2999.00,
-      discount: "-50%",
+      title: "Sapphire Drop Earrings",
+      currentPrice: 42000.00,
+      oldPrice: 55000.00,
+      discount: "-25%",
       image:
-          "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/f4/05/41/f4054166dccbf42baf55d8501074b012.jpg",
     ),
     ProductItem(
-      title: "Leather Wallet",
-      currentPrice: 799.00,
-      oldPrice: 1599.00,
-      discount: "-50%",
+      title: "Infinity Gold Bracelet",
+      currentPrice: 35000.00,
+      oldPrice: 45000.00,
+      discount: "-22%",
       image:
-          "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/c3/8e/3e/c38e3e93d6d993c115314b20274943fa.jpg",
     ),
     ProductItem(
-      title: "Premium Belt",
-      currentPrice: 599.00,
-      oldPrice: 1199.00,
-      discount: "-50%",
+      title: "Classic Solitaire Ring",
+      currentPrice: 95000.00,
+      oldPrice: 110000.00,
+      discount: "-15%",
       image:
-          "https://images.unsplash.com/photo-1624222247344-550fb60583c2?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/0f/5f/1a/0f5f1a0cc6a898a8b23e72fb2b1a087f.jpg",
     ),
     ProductItem(
-      title: "Classic Sneakers",
-      currentPrice: 2499.00,
-      oldPrice: 4999.00,
-      discount: "-50%",
-      image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+      title: "Rose Gold Pendant",
+      currentPrice: 28000.00,
+      oldPrice: 35000.00,
+      discount: "-20%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/36/dc/71/36dc71af1ca7f5c4a8fdfe73bbb688b1.jpg",
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 15),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.purple.shade50,
-            Colors.pink.shade50,
-            Colors.blue.shade50,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Column(
-        children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.only(bottom: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          "Perfect Match for You",
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E2832),
-                          ),
+    return Column(
+      children: [
+        // Header
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        "Perfect Match for You",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E2832),
                         ),
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF9C27B0), Color(0xFFE91E63)],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.stars, color: Colors.white, size: 16),
-                              SizedBox(width: 4),
-                              Text(
-                                "AI Recommended",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "Curated specially based on your preferences",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade600,
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    _buildNavButton(
-                      icon: Icons.chevron_left,
-                      onTap: () => _carouselController.previousPage(),
-                    ),
-                    const SizedBox(width: 10),
-                    _buildNavButton(
-                      icon: Icons.chevron_right,
-                      onTap: () => _carouselController.nextPage(),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                      const SizedBox(width: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF9C27B0), Color(0xFFE91E63)],
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(Icons.stars, color: Colors.white, size: 16),
+                            SizedBox(width: 4),
+                            Text(
+                              "AI Recommended",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Curated specially based on your taste in luxury",
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildNavButton(
+                    icon: Icons.chevron_left,
+                    onTap: () => _carouselController.previousPage(),
+                  ),
+                  const SizedBox(width: 10),
+                  _buildNavButton(
+                    icon: Icons.chevron_right,
+                    onTap: () => _carouselController.nextPage(),
+                  ),
+                ],
+              ),
+            ],
           ),
+        ),
 
-          // Carousel
-          CarouselSlider.builder(
-            carouselController: _carouselController,
-            itemCount: (products.length / 5).ceil(),
-            options: CarouselOptions(
-              height: 400,
-              viewportFraction: 1.0,
-              enableInfiniteScroll: true,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 4),
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              },
-            ),
-            itemBuilder: (context, pageIndex, realIndex) {
-              final startIdx = pageIndex * 5;
-              final itemsInPage = <ProductItem>[];
-
-              for (int i = 0; i < 5 && startIdx + i < products.length; i++) {
-                itemsInPage.add(products[startIdx + i]);
-              }
-
-              return Row(
-                children: itemsInPage.map((product) {
+        // Carousel content
+        CarouselSlider.builder(
+          carouselController: _carouselController,
+          itemCount: (products.length / 5).ceil(),
+          options: CarouselOptions(
+            height: 380,
+            viewportFraction: 1.0,
+            enableInfiniteScroll: true,
+            autoPlay: false,
+          ),
+          itemBuilder: (context, index, realIndex) {
+            final int start = index * 5;
+            return Row(
+              children: List.generate(5, (i) {
+                final int currentIdx = start + i;
+                if (currentIdx < products.length) {
                   return Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: DesktopProductCard(product: product),
+                      padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
+                      child: _MatchCard(product: products[currentIdx]),
                     ),
                   );
-                }).toList(),
-              );
-            },
-          ),
-
-          const SizedBox(height: 24),
-
-          // Indicators
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate((products.length / 5).ceil(), (index) {
-              return GestureDetector(
-                onTap: () => _carouselController.animateToPage(index),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: _current == index ? 32 : 8,
-                  height: 8,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: _current == index
-                        ? const Color(0xFF9C27B0)
-                        : Colors.grey.shade300,
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
+                } else {
+                  return const Expanded(child: SizedBox());
+                }
+              }),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -246,6 +192,128 @@ class _DesktopPerfectMatchSectionState
           border: Border.all(color: Colors.grey.shade200),
         ),
         child: Icon(icon, color: const Color(0xFF1E2832), size: 20),
+      ),
+    );
+  }
+}
+
+class _MatchCard extends StatefulWidget {
+  final ProductItem product;
+
+  const _MatchCard({required this.product});
+
+  @override
+  State<_MatchCard> createState() => _MatchCardState();
+}
+
+class _MatchCardState extends State<_MatchCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                DesktopProductDetailPage(product: widget.product),
+          ),
+        );
+      },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            children: [
+              // Image Box
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        widget.product.image,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
+                              child: Icon(Icons.image_outlined, size: 40),
+                            ),
+                      ),
+                      if (_isHovered)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              // Product Info
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.product.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${widget.product.currentPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.product.discount,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF4F46E5),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "₹${widget.product.oldPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            decoration: TextDecoration.lineThrough,
+                            color: Color(0xFFBDBDBD),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

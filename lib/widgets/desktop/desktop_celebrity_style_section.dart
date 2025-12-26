@@ -1,132 +1,285 @@
 import 'package:flutter/material.dart';
-import '../../utils/app_colors.dart';
-import '../../screens/shop_screen.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import '../../models/data_models.dart';
+import '../../screens/desktop/desktop_product_detail_page.dart';
 
-class DesktopCelebrityStyleSection extends StatelessWidget {
+class DesktopCelebrityStyleSection extends StatefulWidget {
   const DesktopCelebrityStyleSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 100),
-      color: const Color(0xFFFAF9F6),
-      child: Column(
-        children: [
-          const Text(
-            'As Seen On Celebrities',
-            style: TextStyle(
-              fontSize: 42,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Stars shining brighter with Rudram Jewels',
-            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-          ),
-          const SizedBox(height: 60),
+  State<DesktopCelebrityStyleSection> createState() =>
+      _DesktopCelebrityStyleSectionState();
+}
 
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.7,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 30,
-            ),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return _buildCelebrityCard(context, index);
-            },
+class _DesktopCelebrityStyleSectionState
+    extends State<DesktopCelebrityStyleSection> {
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
+
+  final List<ProductItem> products = [
+    ProductItem(
+      title: "Royal Emerald Diamond Set",
+      currentPrice: 85000.00,
+      oldPrice: 125000.00,
+      discount: "-32%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/6a/55/96/6a55960bc89259fa0cc11bf784e1d28c.jpg",
+    ),
+    ProductItem(
+      title: "Sapphire Drop Earrings",
+      currentPrice: 42000.00,
+      oldPrice: 55000.00,
+      discount: "-25%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/f4/05/41/f4054166dccbf42baf55d8501074b012.jpg",
+    ),
+    ProductItem(
+      title: "Infinity Gold Bracelet",
+      currentPrice: 35000.00,
+      oldPrice: 45000.00,
+      discount: "-22%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/c3/8e/3e/c38e3e93d6d993c115314b20274943fa.jpg",
+    ),
+    ProductItem(
+      title: "Classic Solitaire Ring",
+      currentPrice: 95000.00,
+      oldPrice: 110000.00,
+      discount: "-15%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/0f/5f/1a/0f5f1a0cc6a898a8b23e72fb2b1a087f.jpg",
+    ),
+    ProductItem(
+      title: "Rose Gold Pendant",
+      currentPrice: 28000.00,
+      oldPrice: 35000.00,
+      discount: "-20%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/36/dc/71/36dc71af1ca7f5c4a8fdfe73bbb688b1.jpg",
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Header
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "As Seen On Celebrities",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E2832),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Stars shining brighter with Rudram Jewels",
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  _buildNavButton(
+                    icon: Icons.chevron_left,
+                    onTap: () => _carouselController.previousPage(),
+                  ),
+                  const SizedBox(width: 10),
+                  _buildNavButton(
+                    icon: Icons.chevron_right,
+                    onTap: () => _carouselController.nextPage(),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+
+        // Carousel content
+        CarouselSlider.builder(
+          carouselController: _carouselController,
+          itemCount: (products.length / 5).ceil(),
+          options: CarouselOptions(
+            height: 380,
+            viewportFraction: 1.0,
+            enableInfiniteScroll: true,
+            autoPlay: false,
+          ),
+          itemBuilder: (context, index, realIndex) {
+            final int start = index * 5;
+            return Row(
+              children: List.generate(5, (i) {
+                final int currentIdx = start + i;
+                if (currentIdx < products.length) {
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
+                      child: _CelebProductCard(product: products[currentIdx]),
+                    ),
+                  );
+                } else {
+                  return const Expanded(child: SizedBox());
+                }
+              }),
+            );
+          },
+        ),
+      ],
     );
   }
 
-  Widget _buildCelebrityCard(BuildContext context, int index) {
-    final celebs = [
-      {
-        'name': 'Deepika Padukone',
-        'event': 'Cannes Film Festival',
-        'image':
-            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg',
-      },
-      {
-        'name': 'Priyanka Chopra',
-        'event': 'Met Gala After Party',
-        'image':
-            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg',
-      },
-      {
-        'name': 'Alia Bhatt',
-        'event': 'Awards Night',
-        'image':
-            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/3_i5pjnq.jpg',
-      },
-    ];
-    final item = celebs[index];
+  Widget _buildNavButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Icon(icon, color: const Color(0xFF1E2832), size: 20),
+      ),
+    );
+  }
+}
 
+class _CelebProductCard extends StatefulWidget {
+  final ProductItem product;
+
+  const _CelebProductCard({required this.product});
+
+  @override
+  State<_CelebProductCard> createState() => _CelebProductCardState();
+}
+
+class _CelebProductCardState extends State<_CelebProductCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ShopScreen()),
+          MaterialPageRoute(
+            builder: (context) =>
+                DesktopProductDetailPage(product: widget.product),
+          ),
         );
       },
       child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            image: DecorationImage(
-              image: NetworkImage(item['image']!),
-              fit: BoxFit.cover,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            children: [
+              // Image Box
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        widget.product.image,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
+                              child: Icon(Icons.image_outlined, size: 40),
+                            ),
+                      ),
+                      if (_isHovered)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              // Product Info
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.product.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${widget.product.currentPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.product.discount,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF4F46E5),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "₹${widget.product.oldPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            decoration: TextDecoration.lineThrough,
+                            color: Color(0xFFBDBDBD),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
-                stops: const [0.6, 1.0],
-              ),
-            ),
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item['name']!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  item['event']!,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

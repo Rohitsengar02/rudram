@@ -1,120 +1,190 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import '../../utils/app_colors.dart';
-import '../../screens/shop_screen.dart';
 
-class DesktopBlogSection extends StatelessWidget {
+class DesktopBlogSection extends StatefulWidget {
   const DesktopBlogSection({super.key});
 
   @override
+  State<DesktopBlogSection> createState() => _DesktopBlogSectionState();
+}
+
+class _DesktopBlogSectionState extends State<DesktopBlogSection> {
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
+
+  final List<Map<String, String>> blogs = [
+    {
+      'title': 'The Art of Choosing Perfect Wedding Jewelry',
+      'date': 'December 20, 2024',
+      'category': 'Wedding Guide',
+      'excerpt':
+          'Discover the timeless pieces that will make your special day even more memorable...',
+      'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/1200x/6a/55/96/6a55960bc89259fa0cc11bf784e1d28c.jpg',
+    },
+    {
+      'title': '2024 Jewelry Trends: What\'s Hot This Season',
+      'date': 'December 18, 2024',
+      'category': 'Trends',
+      'excerpt':
+          'From minimalist designs to bold statement pieces, explore what\'s trending...',
+      'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/1200x/f4/05/41/f4054166dccbf42baf55d8501074b012.jpg',
+    },
+    {
+      'title': 'Caring for Your Precious Gemstones',
+      'date': 'December 15, 2024',
+      'category': 'Care Tips',
+      'excerpt':
+          'Learn the best practices to keep your jewelry sparkling for generations...',
+      'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/c3/8e/3e/c38e3e93d6d993c115314b20274943fa.jpg',
+    },
+    {
+      'title': 'Sustainable Luxury: Our Commitment',
+      'date': 'December 10, 2024',
+      'category': 'Ethics',
+      'excerpt':
+          'How we source our diamonds and gold responsibly to protect our planet...',
+      'image':
+          'https://images.weserv.nl/?url=https://i.pinimg.com/736x/0f/5f/1a/0f5f1a0cc6a898a8b23e72fb2b1a087f.jpg',
+    },
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 100),
-      color: const Color(0xFFFAF9F6),
-      child: Column(
-        children: [
-          // Section Header
-          const Text(
-            'From The Blog',
-            style: TextStyle(
-              fontSize: 42,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textDark,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Latest trends, tips, and stories from the world of jewelry',
-            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-          ),
-          const SizedBox(height: 60),
-          // Blog Grid
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.75,
-              crossAxisSpacing: 40,
-              mainAxisSpacing: 40,
-            ),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return _buildBlogCard(index);
-            },
-          ),
-          const SizedBox(height: 60),
-          OutlinedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ShopScreen()),
-              );
-            },
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: AppColors.primaryOrange, width: 2),
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+    return Column(
+      children: [
+        // Header
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "From The Blog",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E2832),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Latest trends, stories and jewelry care tips",
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  ),
+                ],
               ),
-            ),
-            child: const Text(
-              'Read More Articles',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.primaryOrange,
+              Row(
+                children: [
+                  _buildNavButton(
+                    icon: Icons.chevron_left,
+                    onTap: () => _carouselController.previousPage(),
+                  ),
+                  const SizedBox(width: 10),
+                  _buildNavButton(
+                    icon: Icons.chevron_right,
+                    onTap: () => _carouselController.nextPage(),
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+
+        // Carousel content
+        CarouselSlider.builder(
+          carouselController: _carouselController,
+          itemCount: (blogs.length / 3).ceil(),
+          options: CarouselOptions(
+            height: 480,
+            viewportFraction: 1.0,
+            enableInfiniteScroll: true,
+            autoPlay: false,
+          ),
+          itemBuilder: (context, index, realIndex) {
+            final int start = index * 3;
+            return Row(
+              children: List.generate(3, (i) {
+                final int currentIdx = start + i;
+                if (currentIdx < blogs.length) {
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: i == 2 ? 0 : 30),
+                      child: _BlogCard(blog: blogs[currentIdx]),
+                    ),
+                  );
+                } else {
+                  return const Expanded(child: SizedBox());
+                }
+              }),
+            );
+          },
+        ),
+      ],
     );
   }
 
-  Widget _buildBlogCard(int index) {
-    final blogs = [
-      {
-        'title': 'The Art of Choosing Perfect Wedding Jewelry',
-        'date': 'December 20, 2024',
-        'category': 'Wedding Guide',
-        'excerpt':
-            'Discover the timeless pieces that will make your special day even more memorable...',
-        'image':
-            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg',
-      },
-      {
-        'title': '2024 Jewelry Trends: What\'s Hot This Season',
-        'date': 'December 18, 2024',
-        'category': 'Trends',
-        'excerpt':
-            'From minimalist designs to bold statement pieces, explore what\'s trending...',
-        'image':
-            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg',
-      },
-      {
-        'title': 'Caring for Your Precious Gemstones',
-        'date': 'December 15, 2024',
-        'category': 'Care Tips',
-        'excerpt':
-            'Learn the best practices to keep your jewelry sparkling for generations...',
-        'image':
-            'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/7_i3yykt.jpg',
-      },
-    ];
-
-    final blog = blogs[index];
-
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
+  Widget _buildNavButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
       child: Container(
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
+          shape: BoxShape.circle,
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Icon(icon, color: const Color(0xFF1E2832), size: 20),
+      ),
+    );
+  }
+}
+
+class _BlogCard extends StatefulWidget {
+  final Map<String, String> blog;
+
+  const _BlogCard({required this.blog});
+
+  @override
+  State<_BlogCard> createState() => _BlogCardState();
+}
+
+class _BlogCardState extends State<_BlogCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(_isHovered ? 0.12 : 0.04),
+              blurRadius: _isHovered ? 30 : 15,
+              offset: Offset(0, _isHovered ? 15 : 5),
             ),
           ],
         ),
@@ -124,34 +194,20 @@ class DesktopBlogSection extends StatelessWidget {
             // Image
             Stack(
               children: [
-                Container(
-                  height: 250,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
-                    color: Colors.grey[100],
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
                   ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
-                    child: Image.network(
-                      blog['image']!,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[200],
-                          child: const Icon(Icons.article, size: 60),
-                        );
-                      },
-                    ),
+                  child: Image.network(
+                    widget.blog['image']!,
+                    height: 240,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 Positioned(
-                  top: 16,
-                  left: 16,
+                  top: 15,
+                  left: 15,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
@@ -162,72 +218,84 @@ class DesktopBlogSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      blog['category']!,
+                      widget.blog['category']!,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0,
                       ),
                     ),
                   ),
                 ),
+                if (_isHovered)
+                  Positioned.fill(
+                    child: Container(color: Colors.black.withOpacity(0.1)),
+                  ),
               ],
             ),
             // Content
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      blog['date']!,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            Padding(
+              padding: const EdgeInsets.all(25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.blog['date']!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.w500,
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      blog['title']!,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textDark,
-                        height: 1.3,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    widget.blog['title']!,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textDark,
+                      height: 1.4,
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      blog['excerpt']!,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700],
-                        height: 1.5,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    widget.blog['excerpt']!,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                      height: 1.5,
                     ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        const Text(
-                          'Read More',
-                          style: TextStyle(
-                            color: AppColors.primaryOrange,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                          ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        "READ MORE",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: _isHovered
+                              ? AppColors.primaryOrange
+                              : AppColors.textDark,
+                          letterSpacing: 1.2,
                         ),
-                        const SizedBox(width: 8),
-                        const Icon(
-                          Icons.arrow_forward,
-                          color: AppColors.primaryOrange,
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 16,
+                        color: _isHovered
+                            ? AppColors.primaryOrange
+                            : AppColors.textDark,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

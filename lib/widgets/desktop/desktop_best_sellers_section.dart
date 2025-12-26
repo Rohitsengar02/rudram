@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/data_models.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'desktop_product_card.dart';
+import '../../screens/desktop/desktop_product_detail_page.dart';
 
 class DesktopBestSellersSection extends StatefulWidget {
   const DesktopBestSellersSection({super.key});
@@ -14,51 +14,48 @@ class DesktopBestSellersSection extends StatefulWidget {
 class _DesktopBestSellersSectionState extends State<DesktopBestSellersSection> {
   final CarouselSliderController _carouselController =
       CarouselSliderController();
-  int _current = 0;
 
-  // Mock Data
+  // Mock Data for Best Sellers with Jewelry context and CORS proxy
   final List<ProductItem> products = [
     ProductItem(
-      title: "Premium Leather Jacket",
-      currentPrice: 12999.00,
-      oldPrice: 19999.00,
-      discount: "-35%",
-      image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",
-      bgColor: const Color(0xFFF5F5F5),
-    ),
-    ProductItem(
-      title: "Designer Sunglasses",
-      currentPrice: 3999.00,
-      oldPrice: 8999.00,
-      discount: "-55%",
+      title: "Royal Emerald Diamond Set",
+      currentPrice: 85000.00,
+      oldPrice: 125000.00,
+      discount: "-32%",
       image:
-          "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/6a/55/96/6a55960bc89259fa0cc11bf784e1d28c.jpg",
     ),
     ProductItem(
-      title: "Canvas Backpack",
-      currentPrice: 2499.00,
-      oldPrice: 4999.00,
-      discount: "-50%",
-      image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500",
-      bgColor: const Color(0xFFF5F5F5),
-    ),
-    ProductItem(
-      title: "Vintage Wristwatch",
-      currentPrice: 8999.00,
-      oldPrice: 15999.00,
-      discount: "-43%",
+      title: "Sapphire Drop Earrings",
+      currentPrice: 42000.00,
+      oldPrice: 55000.00,
+      discount: "-25%",
       image:
-          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/f4/05/41/f4054166dccbf42baf55d8501074b012.jpg",
     ),
     ProductItem(
-      title: "Casual Sneakers",
-      currentPrice: 4499.00,
-      oldPrice: 7999.00,
-      discount: "-43%",
-      image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+      title: "Infinity Gold Bracelet",
+      currentPrice: 35000.00,
+      oldPrice: 45000.00,
+      discount: "-22%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/c3/8e/3e/c38e3e93d6d993c115314b20274943fa.jpg",
+    ),
+    ProductItem(
+      title: "Classic Solitaire Ring",
+      currentPrice: 95000.00,
+      oldPrice: 110000.00,
+      discount: "-15%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/0f/5f/1a/0f5f1a0cc6a898a8b23e72fb2b1a087f.jpg",
+    ),
+    ProductItem(
+      title: "Rose Gold Pendant",
+      currentPrice: 28000.00,
+      oldPrice: 35000.00,
+      discount: "-20%",
+      image:
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/36/dc/71/36dc71af1ca7f5c4a8fdfe73bbb688b1.jpg",
     ),
   ];
 
@@ -72,23 +69,13 @@ class _DesktopBestSellersSectionState extends State<DesktopBestSellersSection> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Best Sellers",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E2832),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Top rated products by our customers",
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                  ),
-                ],
+              const Text(
+                "Best Sellers",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2832),
+                ),
               ),
               Row(
                 children: [
@@ -108,63 +95,33 @@ class _DesktopBestSellersSectionState extends State<DesktopBestSellersSection> {
         ),
 
         // Carousel content
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: CarouselSlider.builder(
-            carouselController: _carouselController,
-            itemCount: (products.length / 4).ceil(),
-            options: CarouselOptions(
-              height: 480,
-              viewportFraction: 1.0,
-              enableInfiniteScroll: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              },
-            ),
-            itemBuilder: (context, index, realIndex) {
-              final int startIdx = index * 4;
-              final List<ProductItem> pageProducts = [];
-              for (int i = 0; i < 4 && startIdx + i < products.length; i++) {
-                pageProducts.add(products[startIdx + i]);
-              }
-
-              return Row(
-                children: pageProducts.map((product) {
+        CarouselSlider.builder(
+          carouselController: _carouselController,
+          itemCount: (products.length / 5).ceil(),
+          options: CarouselOptions(
+            height: 380,
+            viewportFraction: 1.0,
+            enableInfiniteScroll: true,
+            autoPlay: false,
+          ),
+          itemBuilder: (context, index, realIndex) {
+            final int start = index * 5;
+            return Row(
+              children: List.generate(5, (i) {
+                final int currentIdx = start + i;
+                if (currentIdx < products.length) {
                   return Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: DesktopProductCard(product: product),
+                      padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
+                      child: _BestSellerCard(product: products[currentIdx]),
                     ),
                   );
-                }).toList(),
-              );
-            },
-          ),
-        ),
-
-        const SizedBox(height: 20),
-
-        // Indicators
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate((products.length / 4).ceil(), (index) {
-            return GestureDetector(
-              onTap: () => _carouselController.animateToPage(index),
-              child: Container(
-                width: _current == index ? 24 : 8,
-                height: 8,
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: _current == index
-                      ? const Color(0xFFE91E63)
-                      : Colors.grey.shade300,
-                ),
-              ),
+                } else {
+                  return const Expanded(child: SizedBox());
+                }
+              }),
             );
-          }),
+          },
         ),
       ],
     );
@@ -193,6 +150,128 @@ class _DesktopBestSellersSectionState extends State<DesktopBestSellersSection> {
           border: Border.all(color: Colors.grey.shade200),
         ),
         child: Icon(icon, color: const Color(0xFF1E2832), size: 20),
+      ),
+    );
+  }
+}
+
+class _BestSellerCard extends StatefulWidget {
+  final ProductItem product;
+
+  const _BestSellerCard({required this.product});
+
+  @override
+  State<_BestSellerCard> createState() => _BestSellerCardState();
+}
+
+class _BestSellerCardState extends State<_BestSellerCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                DesktopProductDetailPage(product: widget.product),
+          ),
+        );
+      },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            children: [
+              // Image Box
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        widget.product.image,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
+                              child: Icon(Icons.image_outlined, size: 40),
+                            ),
+                      ),
+                      if (_isHovered)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              // Product Info
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.product.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${widget.product.currentPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.product.discount,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF4F46E5),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "₹${widget.product.oldPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            decoration: TextDecoration.lineThrough,
+                            color: Color(0xFFBDBDBD),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

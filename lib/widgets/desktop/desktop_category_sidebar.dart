@@ -145,7 +145,7 @@ class _DesktopCategoriesSidebarState extends State<DesktopCategoriesSidebar> {
     final colors = [
       const Color(0xFF2196F3),
       const Color(0xFF4CAF50),
-      const Color(0xFFE91E63),
+      const Color(0xFF4F46E5),
       const Color(0xFF00BCD4),
       const Color(0xFFFFC107),
       const Color(0xFF9C27B0),

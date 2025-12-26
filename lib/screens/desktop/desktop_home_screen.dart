@@ -18,6 +18,7 @@ import '../../widgets/desktop/desktop_all_products_section.dart';
 import '../../widgets/desktop/desktop_our_features_section.dart';
 import '../../widgets/desktop/desktop_temple_jewellery_section.dart';
 import '../../widgets/desktop/desktop_celebrity_style_section.dart';
+import '../../widgets/desktop/desktop_categories_section.dart';
 import '../../widgets/desktop/desktop_footer_section.dart';
 
 class DesktopHomeScreen extends StatelessWidget {
@@ -36,17 +37,16 @@ class DesktopHomeScreen extends StatelessWidget {
             // 2. Hero Section (Full Width)
             const DesktopHeroSection(),
 
-            const SizedBox(height: 20),
+            // 2.5 Categories Section
+            const DesktopCategoriesSection(),
 
-            // 3. Promo Code Banner
-            const SizedBox(height: 50),
+            const SizedBox(height: 20),
 
             // Other Sections
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 children: [
-                  const PromoCodeBanner(),
                   const DesktopFlashSaleSection(),
                   const SizedBox(height: 30),
                   const DesktopNewArrivalsSection(),
@@ -54,7 +54,7 @@ class DesktopHomeScreen extends StatelessWidget {
                   const DesktopBestSellersSection(),
                   const SizedBox(height: 30),
                   const DesktopTrendingNowSection(),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10), // Reduced gap
                   const DesktopExclusiveOffersSection(),
                   const SizedBox(height: 30),
                   const DesktopShopByOccasionSection(),
@@ -71,7 +71,7 @@ class DesktopHomeScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   const DesktopInstaFamilySection(),
                   const SizedBox(height: 30),
-                  const DesktopAllProductsSection(),
+                  DesktopAllProductsSection(),
                   const SizedBox(height: 30),
                   const DesktopOurFeaturesSection(),
                   const SizedBox(height: 30),

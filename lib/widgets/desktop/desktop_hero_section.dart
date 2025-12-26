@@ -8,399 +8,106 @@ class DesktopHeroSection extends StatefulWidget {
   State<DesktopHeroSection> createState() => _DesktopHeroSectionState();
 }
 
-class _DesktopHeroSectionState extends State<DesktopHeroSection> {
-  int _currentBanner = 0;
+class _DesktopHeroSectionState extends State<DesktopHeroSection>
+    with TickerProviderStateMixin {
+  int _currentSlide = 0;
+  late AnimationController _cardAnimationController;
+  final List<bool> _isCardHovered = [false, false, false, false];
 
-  final List<String> _bannerImages = [
-    'assets/images/banner_1.jpg',
-    'assets/images/banner_2.jpg',
-    'assets/images/banner_3.png',
+  final List<Map<String, dynamic>> _carouselItems = [
+    {
+      'image':
+          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766772771/Gemini_Generated_Image_fc6eesfc6eesfc6e_p6vjtu.png',
+    },
+    {
+      'image':
+          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766772766/Gemini_Generated_Image_6v06r16v06r16v06_hky38x.png',
+    },
+    {
+      'image':
+          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766772769/Gemini_Generated_Image_6wnqjh6wnqjh6wnq_prum6f.png',
+    },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _cardAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  void dispose() {
+    _cardAnimationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFF5F5F5), // Light gray background
+      color: const Color(0xFFF8F9FA),
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Left Sidebar - All Categories
-          _buildCategoriesSidebar(),
-
-          const SizedBox(width: 20),
-
-          // Center - Main Banner
-          Expanded(flex: 2, child: _buildMainBanner()),
-
-          const SizedBox(width: 20),
-
-          // Right Sidebar - Promotional Cards
-          _buildPromotionalCards(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoriesSidebar() {
-    final categories = [
-      CategoryItem('Pet Supplies', Icons.pets, Colors.orange),
-      CategoryItem('Jewelry & Accessories', Icons.watch, Colors.pink),
-      CategoryItem('Books & Stationery', Icons.menu_book, Colors.yellow),
-      CategoryItem('Toys & Games', Icons.toys, Colors.orange),
-      CategoryItem('Health & Fitness', Icons.fitness_center, Colors.red),
-      CategoryItem('Beauty & Personal Care', Icons.face, Colors.blue),
-      CategoryItem('Fashion & Apparel', Icons.checkroom, Colors.orange),
-      CategoryItem('Gadgets', Icons.devices, Colors.purple),
-      CategoryItem('Industrial Parts & Tools', Icons.build, Colors.red),
-    ];
-
-    return Container(
-      width: 240,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFE91E63), Color(0xFFD81B60)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.apps, color: Colors.white, size: 20),
-                SizedBox(width: 10),
-                Text(
-                  'All Categories',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Category List
-          Container(
-            constraints: const BoxConstraints(maxHeight: 400),
-            child: ListView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                return InkWell(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.grey.shade200,
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: category.color.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Icon(
-                            category.icon,
-                            color: category.color,
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            category.name,
-                            style: const TextStyle(
-                              color: Color(0xFF333333),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey.shade400,
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMainBanner() {
-    return Container(
-      height: 440,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Carousel
-          CarouselSlider(
-            options: CarouselOptions(
-              height: 440,
-              viewportFraction: 1.0,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 5),
-              onPageChanged: (index, reason) {
-                setState(() => _currentBanner = index);
-              },
-            ),
-            items: _bannerImages.map((imageUrl) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Icon(Icons.image, size: 60, color: Colors.white),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }).toList(),
-          ),
-
-          // Carousel Indicators
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_bannerImages.length, (index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: _currentBanner == index ? 24 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: _currentBanner == index
-                        ? Colors.white
-                        : Colors.white.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                );
-              }),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPromotionalCards() {
-    return SizedBox(
-      width: 240,
-      child: Column(
-        children: [
-          // Card 1 - Trending
-          _buildPromoCard(
-            badge: 'TRENDING',
-            badgeColor: const Color(0xFFE91E63),
-            title: 'COLORFUL PILLOWS',
-            price: '₹299',
-            imageUrl: 'assets/images/pillows.jpg',
-          ),
-
-          const SizedBox(height: 20),
-
-          // Card 2 - Premium
-          _buildPromoCard(
-            badge: 'PREMIUM',
-            badgeColor: const Color(0xFFE91E63),
-            title: 'INTERIOR DESIGN',
-            price: '₹499',
-            imageUrl: 'assets/images/interior.jpg',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPromoCard({
-    required String badge,
-    required Color badgeColor,
-    required String title,
-    required String price,
-    required String imageUrl,
-  }) {
-    return Container(
-      height: 210,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Stack(
-          fit: StackFit.expand,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Background Image
-            Image.asset(
-              imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.grey.shade300,
-                  child: const Center(
-                    child: Icon(Icons.image, size: 40, color: Colors.white),
-                  ),
-                );
-              },
-            ),
+            // Left - Main Banner Carousel (60% width)
+            Expanded(flex: 60, child: _buildMainBanner()),
 
-            // Gradient Overlay
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
-                ),
+            const SizedBox(width: 10),
+            // Right - Column 1 (20% width)
+            Expanded(
+              flex: 20,
+              child: Column(
+                children: [
+                  AspectRatio(
+                    aspectRatio: 1.3,
+                    child: _buildEnhancedCard(
+                      index: 0,
+                      imageUrl: '',
+                      bgImageUrl:
+                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773995/8512716e33d20cac2f4019e1a59ce41f_kuyugk.jpg',
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  AspectRatio(
+                    aspectRatio: 1.3,
+                    child: _buildEnhancedCard(
+                      index: 1,
+                      imageUrl: '',
+                      bgImageUrl:
+                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/8f2249c31350c4cb0f69dd74de9f8878_ztxcyd.jpg',
+                    ),
+                  ),
+                ],
               ),
             ),
 
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(20),
+            const SizedBox(width: 10),
+            // Right - Column 2 (20% width)
+            Expanded(
+              flex: 20,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: badgeColor,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.star, color: Colors.white, size: 12),
-                        const SizedBox(width: 4),
-                        Text(
-                          badge,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
+                  AspectRatio(
+                    aspectRatio: 1.3,
+                    child: _buildEnhancedCard(
+                      index: 2,
+                      imageUrl: '',
+                      bgImageUrl:
+                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/d9d4b96415c4c99a2cd17c53e1e15fde_efwks7.jpg',
                     ),
                   ),
-
-                  const Spacer(),
-
-                  // Title
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      height: 1.2,
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Price
-                  Text(
-                    'Starts at $price',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Shop Now Button
-                  InkWell(
-                    onTap: () {},
-                    child: Row(
-                      children: const [
-                        Text(
-                          'Shop now',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                      ],
+                  const SizedBox(height: 10),
+                  AspectRatio(
+                    aspectRatio: 1.3,
+                    child: _buildEnhancedCard(
+                      index: 3,
+                      imageUrl: '',
+                      bgImageUrl:
+                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/97ce300ef56c4bcee8f351a3a037916f_bbqex9.jpg',
                     ),
                   ),
                 ],
@@ -411,6 +118,203 @@ class _DesktopHeroSectionState extends State<DesktopHeroSection> {
       ),
     );
   }
+
+  Widget _buildEnhancedCard({
+    required int index,
+    required String imageUrl,
+    String? bgImageUrl,
+  }) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isCardHovered[index] = true),
+      onExit: (_) => setState(() => _isCardHovered[index] = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        transform: Matrix4.identity()
+          ..translate(0.0, _isCardHovered[index] ? -8.0 : 0.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(
+                _isCardHovered[index] ? 0.15 : 0.05,
+              ),
+              blurRadius: _isCardHovered[index] ? 20 : 10,
+              offset: Offset(0, _isCardHovered[index] ? 10 : 5),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            if (bgImageUrl != null)
+              Positioned.fill(
+                child: bgImageUrl.startsWith('http')
+                    ? Image.network(bgImageUrl, fit: BoxFit.cover)
+                    : Image.asset(bgImageUrl, fit: BoxFit.cover),
+              ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              top: 0,
+              child: AnimatedScale(
+                duration: const Duration(milliseconds: 300),
+                scale: _isCardHovered[index] ? 1.05 : 1.0,
+                child: imageUrl.isEmpty
+                    ? const SizedBox()
+                    : imageUrl.startsWith('http')
+                    ? Image.network(
+                        imageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const SizedBox(),
+                      )
+                    : Image.asset(
+                        imageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const SizedBox(),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainBanner() {
+    return Stack(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            height: 400,
+            viewportFraction: 1.0,
+            autoPlay: true,
+            autoPlayInterval: const Duration(seconds: 5),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            autoPlayCurve: Curves.easeInOutCubic,
+            enlargeCenterPage: false,
+            onPageChanged: (index, reason) {
+              setState(() => _currentSlide = index);
+            },
+          ),
+          items: _carouselItems.map((item) {
+            return TweenAnimationBuilder<double>(
+              duration: const Duration(milliseconds: 500),
+              tween: Tween(begin: 0.0, end: 1.0),
+              builder: (context, value, child) {
+                return Transform.scale(
+                  scale: 0.95 + (value * 0.05),
+                  child: Opacity(opacity: value, child: child),
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(40),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: item['image'].startsWith('http')
+                          ? Image.network(
+                              item['image'],
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Color(0xFF4F46E5),
+                                      ),
+                                    );
+                                  },
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Center(
+                                    child: Icon(Icons.image_outlined, size: 40),
+                                  ),
+                            )
+                          : Image.asset(
+                              item['image'],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const SizedBox(),
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        // Enhanced Indicators
+        Positioned(
+          bottom: 24,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(_carouselItems.length, (index) {
+              final isActive = _currentSlide == index;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.symmetric(horizontal: 6),
+                width: isActive ? 32 : 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: isActive
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: isActive
+                      ? [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.5),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : null,
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Custom painter for dot pattern background
+class DotPatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    const spacing = 20.0;
+    const dotRadius = 1.5;
+
+    for (double x = 0; x < size.width; x += spacing) {
+      for (double y = 0; y < size.height; y += spacing) {
+        canvas.drawCircle(Offset(x, y), dotRadius, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class CategoryItem {

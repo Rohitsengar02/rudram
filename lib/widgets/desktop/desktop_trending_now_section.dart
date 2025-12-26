@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/data_models.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'desktop_product_card.dart';
+import '../../screens/desktop/desktop_product_detail_page.dart';
 
 class DesktopTrendingNowSection extends StatefulWidget {
   const DesktopTrendingNowSection({super.key});
@@ -14,54 +14,48 @@ class DesktopTrendingNowSection extends StatefulWidget {
 class _DesktopTrendingNowSectionState extends State<DesktopTrendingNowSection> {
   final CarouselSliderController _carouselController =
       CarouselSliderController();
-  int _current = 0;
 
-  // Mock Data
+  // Jewelry Products matching Best Seller context
   final List<ProductItem> products = [
     ProductItem(
-      title: "Wireless Earbuds Pro",
-      currentPrice: 5999.00,
-      oldPrice: 9999.00,
-      discount: "-40%",
+      title: "Royal Emerald Diamond Set",
+      currentPrice: 85000.00,
+      oldPrice: 125000.00,
+      discount: "-32%",
       image:
-          "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/6a/55/96/6a55960bc89259fa0cc11bf784e1d28c.jpg",
     ),
     ProductItem(
-      title: "Smart Fitness Tracker",
-      currentPrice: 3499.00,
-      oldPrice: 6999.00,
-      discount: "-50%",
+      title: "Sapphire Drop Earrings",
+      currentPrice: 42000.00,
+      oldPrice: 55000.00,
+      discount: "-25%",
       image:
-          "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/f4/05/41/f4054166dccbf42baf55d8501074b012.jpg",
     ),
     ProductItem(
-      title: "Portable Power Bank 20000mAh",
-      currentPrice: 1999.00,
-      oldPrice: 3999.00,
-      discount: "-50%",
+      title: "Infinity Gold Bracelet",
+      currentPrice: 35000.00,
+      oldPrice: 45000.00,
+      discount: "-22%",
       image:
-          "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/c3/8e/3e/c38e3e93d6d993c115314b20274943fa.jpg",
     ),
     ProductItem(
-      title: "Premium Phone Case",
-      currentPrice: 799.00,
-      oldPrice: 1499.00,
-      discount: "-46%",
+      title: "Classic Solitaire Ring",
+      currentPrice: 95000.00,
+      oldPrice: 110000.00,
+      discount: "-15%",
       image:
-          "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/0f/5f/1a/0f5f1a0cc6a898a8b23e72fb2b1a087f.jpg",
     ),
     ProductItem(
-      title: "Bluetooth Speaker",
-      currentPrice: 2999.00,
-      oldPrice: 5999.00,
-      discount: "-50%",
+      title: "Rose Gold Pendant",
+      currentPrice: 28000.00,
+      oldPrice: 35000.00,
+      discount: "-20%",
       image:
-          "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500",
-      bgColor: const Color(0xFFF5F5F5),
+          "https://images.weserv.nl/?url=https://i.pinimg.com/736x/36/dc/71/36dc71af1ca7f5c4a8fdfe73bbb688b1.jpg",
     ),
   ];
 
@@ -71,7 +65,7 @@ class _DesktopTrendingNowSectionState extends State<DesktopTrendingNowSection> {
       children: [
         // Header
         Padding(
-          padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
+          padding: const EdgeInsets.only(bottom: 5, left: 15, right: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -152,11 +146,6 @@ class _DesktopTrendingNowSectionState extends State<DesktopTrendingNowSection> {
               height: 420,
               viewportFraction: 1.0,
               enableInfiniteScroll: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _current = index;
-                });
-              },
             ),
             itemBuilder: (context, index, realIndex) {
               final int startIdx = index * 5;
@@ -170,36 +159,13 @@ class _DesktopTrendingNowSectionState extends State<DesktopTrendingNowSection> {
                   return Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: DesktopProductCard(product: product),
+                      child: _TrendingCard(product: product),
                     ),
                   );
                 }).toList(),
               );
             },
           ),
-        ),
-
-        const SizedBox(height: 20),
-
-        // Indicators
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate((products.length / 5).ceil(), (index) {
-            return GestureDetector(
-              onTap: () => _carouselController.animateToPage(index),
-              child: Container(
-                width: _current == index ? 24 : 8,
-                height: 8,
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: _current == index
-                      ? const Color(0xFFE91E63)
-                      : Colors.grey.shade300,
-                ),
-              ),
-            );
-          }),
         ),
       ],
     );
@@ -228,6 +194,128 @@ class _DesktopTrendingNowSectionState extends State<DesktopTrendingNowSection> {
           border: Border.all(color: Colors.grey.shade200),
         ),
         child: Icon(icon, color: const Color(0xFF1E2832), size: 20),
+      ),
+    );
+  }
+}
+
+class _TrendingCard extends StatefulWidget {
+  final ProductItem product;
+
+  const _TrendingCard({required this.product});
+
+  @override
+  State<_TrendingCard> createState() => _TrendingCardState();
+}
+
+class _TrendingCardState extends State<_TrendingCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                DesktopProductDetailPage(product: widget.product),
+          ),
+        );
+      },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            children: [
+              // Image Box
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        widget.product.image,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
+                              child: Icon(Icons.image_outlined, size: 40),
+                            ),
+                      ),
+                      if (_isHovered)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black.withOpacity(0.05),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              // Product Info
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.product.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.w400,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "₹${widget.product.currentPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.product.discount,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF4F46E5),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "₹${widget.product.oldPrice.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 13,
+                            decoration: TextDecoration.lineThrough,
+                            color: Color(0xFFBDBDBD),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
