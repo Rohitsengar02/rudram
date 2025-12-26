@@ -10,24 +10,15 @@ import '../../widgets/desktop/desktop_exclusive_offers_section.dart';
 import '../../widgets/desktop/desktop_shop_by_occasion_section.dart';
 import '../../widgets/desktop/desktop_deals_of_the_day_section.dart';
 import '../../widgets/desktop/desktop_perfect_match_section.dart';
-import '../../widgets/luxury_section.dart';
-import '../../widgets/watch_and_shop_section.dart';
-import '../../widgets/blog_section.dart';
-import '../../widgets/insta_family_section.dart';
-import '../../widgets/all_products_section.dart';
-import '../../widgets/our_features_section.dart';
-import '../../widgets/temple_jewellery_section.dart';
-import '../../widgets/celebrity_style_section.dart';
-import '../../widgets/gold_scheme_section.dart';
-import '../../widgets/designers_spotlight.dart';
-import '../../widgets/gift_guide_section.dart';
-import '../../widgets/testimonials_section.dart';
-import '../../widgets/newsletter_section.dart';
-import '../../widgets/brand_marquee_section.dart';
-import '../../widgets/community_gallery_section.dart';
-import '../../widgets/faq_section.dart';
-import '../../widgets/awards_section.dart';
-import '../../widgets/footer_section.dart';
+import '../../widgets/desktop/desktop_luxury_section.dart';
+import '../../widgets/desktop/desktop_watch_shop_section.dart';
+import '../../widgets/desktop/desktop_blog_section.dart';
+import '../../widgets/desktop/desktop_insta_family_section.dart';
+import '../../widgets/desktop/desktop_all_products_section.dart';
+import '../../widgets/desktop/desktop_our_features_section.dart';
+import '../../widgets/desktop/desktop_temple_jewellery_section.dart';
+import '../../widgets/desktop/desktop_celebrity_style_section.dart';
+import '../../widgets/desktop/desktop_footer_section.dart';
 
 class DesktopHomeScreen extends StatelessWidget {
   const DesktopHomeScreen({super.key});
@@ -72,41 +63,23 @@ class DesktopHomeScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   const DesktopPerfectMatchSection(),
                   const SizedBox(height: 30),
-                  const LuxurySection(),
+                  const DesktopLuxurySection(),
                   const SizedBox(height: 30),
-                  const WatchAndShopSection(),
+                  const DesktopWatchShopSection(),
                   const SizedBox(height: 30),
-                  const BlogSection(),
+                  const DesktopBlogSection(),
                   const SizedBox(height: 30),
-                  const InstaFamilySection(),
+                  const DesktopInstaFamilySection(),
                   const SizedBox(height: 30),
-                  AllProductsSection(),
+                  const DesktopAllProductsSection(),
                   const SizedBox(height: 30),
-                  const OurFeaturesSection(),
+                  const DesktopOurFeaturesSection(),
                   const SizedBox(height: 30),
-                  TempleJewellerySection(),
+                  const DesktopTempleJewellerySection(),
                   const SizedBox(height: 30),
-                  CelebrityStyleSection(),
+                  const DesktopCelebrityStyleSection(),
                   const SizedBox(height: 30),
-                  GoldSchemeSection(),
-                  const SizedBox(height: 30),
-                  const DesignersSpotlight(),
-                  const SizedBox(height: 30),
-                  GiftGuideSection(),
-                  const SizedBox(height: 30),
-                  TestimonialsSection(),
-                  const SizedBox(height: 30),
-                  const NewsletterSection(),
-                  const SizedBox(height: 30),
-                  const BrandMarqueeSection(),
-                  const SizedBox(height: 30),
-                  CommunityGallerySection(),
-                  const SizedBox(height: 30),
-                  FaqSection(),
-                  const SizedBox(height: 30),
-                  const AwardsSection(),
-                  const SizedBox(height: 30),
-                  const FooterSection(),
+                  const DesktopFooterSection(),
                 ],
               ),
             ),
