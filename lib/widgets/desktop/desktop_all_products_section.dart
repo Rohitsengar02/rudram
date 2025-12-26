@@ -3,7 +3,7 @@ import '../../utils/app_colors.dart';
 import '../../models/data_models.dart';
 import '../../screens/shop_screen.dart';
 import '../../screens/desktop/desktop_product_details_screen.dart';
-import '../../widgets/product_card.dart';
+import 'desktop_product_card.dart';
 
 class DesktopAllProductsSection extends StatelessWidget {
   const DesktopAllProductsSection({super.key});
@@ -90,7 +90,7 @@ class DesktopAllProductsSection extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4, // 4 items per row on desktop
-        childAspectRatio: 0.7,
+        childAspectRatio: 0.65, // Adjusted for new card height with buttons
         crossAxisSpacing: 30,
         mainAxisSpacing: 40,
       ),
@@ -106,7 +106,7 @@ class DesktopAllProductsSection extends StatelessWidget {
               ),
             );
           },
-          child: ProductCard(product: products[index]),
+          child: DesktopProductCard(product: products[index]),
         );
       },
     );

@@ -18,8 +18,16 @@ class DesktopProductDetailsScreen extends StatefulWidget {
 }
 
 class _DesktopProductDetailsScreenState
-    extends State<DesktopProductDetailsScreen> {
-  int _currentImageIndex = 0;
+    extends State<DesktopProductDetailsScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _entranceController;
+  late AnimationController _bgController;
+
+  late Animation<Offset> _leftSlideAnimation;
+  late Animation<Offset> _rightSlideAnimation;
+  late Animation<double> _centerScaleAnimation;
+  late Animation<double> _fadeAnimation;
+
   final List<String> _images = [
     "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/6_mu5hap.jpg",
     "https://res.cloudinary.com/ds1wiqrdb/image/upload/v1765716358/5_lf1dgq.jpg",
@@ -30,10 +38,57 @@ class _DesktopProductDetailsScreenState
   @override
   void initState() {
     super.initState();
-    // Use the product's image as the first image if it exists
     if (widget.product.image.isNotEmpty) {
       _images[0] = widget.product.image;
     }
+
+    _bgController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 20),
+    )..repeat(reverse: true);
+
+    _entranceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+
+    _leftSlideAnimation =
+        Tween<Offset>(begin: const Offset(-0.3, 0), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _entranceController,
+            curve: const Interval(0.0, 0.6, curve: Curves.easeOutCubic),
+          ),
+        );
+
+    _rightSlideAnimation =
+        Tween<Offset>(begin: const Offset(0.3, 0), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _entranceController,
+            curve: const Interval(0.2, 0.8, curve: Curves.easeOutCubic),
+          ),
+        );
+
+    _centerScaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _entranceController,
+        curve: const Interval(0.1, 0.7, curve: Curves.easeOutBack),
+      ),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _entranceController, curve: Curves.easeIn),
+    );
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) _entranceController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _entranceController.dispose();
+    _bgController.dispose();
+    super.dispose();
   }
 
   void _addToCart() {
@@ -72,192 +127,451 @@ class _DesktopProductDetailsScreenState
   }
 
   Widget _buildMainContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 60),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      height: 800,
+      width: double.infinity,
+      color: const Color(0xFFEFF3EF), // Light greenish-grey background
+      child: Stack(
         children: [
-          // Left Side - Image Gallery
-          Expanded(
-            flex: 6,
-            child: Column(
+          // Animated Background
+          Positioned.fill(
+            child: AnimatedBuilder(
+              animation: _bgController,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: _BackgroundPainter(_bgController.value),
+                );
+              },
+            ),
+          ),
+
+          // Main 3-Column Content
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 40),
+            child: Row(
               children: [
-                Container(
-                  height: 600,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      _images[_currentImageIndex],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.broken_image, size: 100),
+                // LEFT COLUMN: Text Info
+                Expanded(
+                  flex: 3,
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _leftSlideAnimation,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.product.title,
+                            style: const TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2C3E50),
+                              height: 1.1,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            "Experience the benefits of timeless elegance with our precision-crafted jewelry, designed to last forever.",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          TextButton(
+                            onPressed: () {}, // Navigate to products
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text(
+                              "VIEW PRODUCTS",
+                              style: TextStyle(
+                                color: Color(
+                                  0xFF2C8A98,
+                                ), // Teal-ish color from image
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 60),
+                          // Color Selection
+                          const Text(
+                            "Available Colors",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2C3E50),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              _buildColorCircle(
+                                const Color(0xFF7CB342),
+                              ), // Green
+                              const SizedBox(width: 12),
+                              _buildColorCircle(
+                                const Color(0xFF5E35B1),
+                              ), // Deep Purple
+                              const SizedBox(width: 12),
+                              _buildColorCircle(const Color(0xFFE53935)), // Red
+                              const SizedBox(width: 12),
+                              _buildColorCircle(
+                                const Color(0xFF039BE5),
+                              ), // Blue
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(_images.length, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _currentImageIndex = index;
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8),
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: _currentImageIndex == index
-                                ? AppColors.primaryOrange
-                                : Colors.grey.shade300,
-                            width: 2,
+
+                // CENTER COLUMN: Podium & Product
+                Expanded(
+                  flex: 5,
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: ScaleTransition(
+                      scale: _centerScaleAnimation,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Background Gradient Circle for Emphasis
+                          Container(
+                            width: 450,
+                            height: 450,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  const Color(0xFFA5D6A7).withOpacity(0.3),
+                                  const Color(0xFF81C784).withOpacity(0.1),
+                                  Colors.white.withOpacity(0.0),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            _images[index],
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.broken_image, size: 20),
+
+                          // Floating Spheres (Decorative)
+                          AnimatedBuilder(
+                            animation: _bgController,
+                            builder: (context, child) {
+                              return Stack(
+                                children: [
+                                  Positioned(
+                                    right: 40,
+                                    top:
+                                        150 +
+                                        (_bgController.value * 20), // Float Y
+                                    child: _buildFloatingSphere(40),
+                                  ),
+                                  Positioned(
+                                    left: 60,
+                                    bottom: 200 - (_bgController.value * 30),
+                                    child: _buildFloatingSphere(60),
+                                  ),
+                                  Positioned(
+                                    bottom: 80,
+                                    right: 100 + (_bgController.value * 15),
+                                    child: _buildFloatingSphere(25),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-                        ),
+
+                          // Podium (White Base)
+                          Positioned(
+                            bottom: 100,
+                            child: Container(
+                              width: 350,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(100),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 30,
+                                    offset: const Offset(0, 15),
+                                    spreadRadius: 5,
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Container(
+                                  // Inner rim
+                                  width: 340,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: Colors.grey.shade100,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Product Image
+                          Positioned(
+                            bottom: 130, // Just sitting on the podium
+                            child: Hero(
+                              tag: widget.product.title,
+                              child: Container(
+                                height: 400, // Adjust based on need
+                                constraints: const BoxConstraints(
+                                  maxWidth: 300,
+                                ),
+                                child: Image.network(
+                                  widget.product.image,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(
+                                        Icons.broken_image,
+                                        size: 100,
+                                        color: Colors.grey,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Text overlay on bottle (optional, matches "DEEP WATER")
+                          Positioned(
+                            bottom: 180,
+                            child: Text(
+                              "RUDRAM",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 24,
+                                letterSpacing: 4,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  }),
+                    ),
+                  ),
+                ),
+
+                // RIGHT COLUMN: Cards
+                Expanded(
+                  flex: 3,
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _rightSlideAnimation,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Top Card
+                          Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "PRE-ORDER",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[800],
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  "We are in the final stages of preparation. You can place your pre-order now.",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                    height: 1.5,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  "₹${widget.product.currentPrice}",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF2C8A98), // Teal
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                TextButton(
+                                  onPressed: _addToCart,
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: const Text(
+                                    "ADD TO CART",
+                                    style: TextStyle(
+                                      color: Color(0xFF2C3E50),
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+
+                          // Bottom Card (Image/Video Placeholder)
+                          Container(
+                            height: 250,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    widget
+                                        .product
+                                        .image, // Use same image or different variant
+                                    fit: BoxFit.cover,
+                                    color: Colors.white.withOpacity(
+                                      0.9,
+                                    ), // Lighten it to look different
+                                    colorBlendMode: BlendMode.modulate,
+                                  ),
+                                ),
+                                Center(
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF2C3E50),
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 5),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.play_arrow,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 20,
+                                  right: -15,
+                                  child: Transform.rotate(
+                                    angle: -1.57,
+                                    child: const Text(
+                                      "PLAY VIDEO",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 60),
 
-          // Right Side - Product Details
-          Expanded(
-            flex: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Text(
-                    "PRECISION SERIES",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  widget.product.title.toUpperCase(),
-                  style: const TextStyle(
-                    fontFamily: 'Playfair Display', // Assuming usage
-                    fontSize: 48,
-                    fontWeight: FontWeight.w900,
-                    height: 1.1,
-                    letterSpacing: -1,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "₹${widget.product.currentPrice}",
-                      style: const TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryOrange,
-                        height: 1,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      "₹${widget.product.oldPrice}",
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.grey[400],
-                        decoration: TextDecoration.lineThrough,
-                        height: 1.2,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                const Text(
-                  "Experience the epitome of luxury with this masterfully crafted piece. Designed for those who appreciate the finer things in life, utilizing only the world's most precious materials.",
-                  style: TextStyle(
-                    fontSize: 16,
-                    height: 1.6,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 48),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _addToCart,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 24),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          "ADD TO CART",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.favorite_border),
-                        padding: const EdgeInsets.all(22),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 48),
-                const Divider(),
-                const SizedBox(height: 24),
-                _buildTechSpecs(),
-              ],
-            ),
+          // Foreground Foliage (Static images or shapes)
+          // Skipping detailed foliage unless I have assets, but conceptually they go here
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFloatingSphere(double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          center: const Alignment(-0.3, -0.5),
+          radius: 0.8,
+          colors: [
+            Colors.grey.shade300,
+            Colors.grey.shade500,
+            Colors.grey.shade800,
+          ],
+          stops: const [0.0, 0.7, 1.0],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: size / 2,
+            offset: Offset(size / 4, size / 4),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildColorCircle(Color color) {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: Border.all(color: Colors.white, width: 2),
       ),
     );
   }
@@ -428,44 +742,48 @@ class _DesktopProductDetailsScreenState
       ],
     );
   }
+}
 
-  Widget _buildTechSpecs() {
-    return Column(
-      children: [
-        _buildSpecRow("Material", "18K Gold / Platinum"),
-        _buildSpecRow("Gemstone", "Certified Diamond"),
-        _buildSpecRow("Weight", "12.5 Grams"),
-        _buildSpecRow("Dimensions", "24mm x 18mm"),
-        _buildSpecRow("Warranty", "Lifetime"),
-      ],
+class _BackgroundPainter extends CustomPainter {
+  final double animationValue;
+
+  _BackgroundPainter(this.animationValue);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..style = PaintingStyle.fill;
+
+    // Center point moves slightly
+    final centerX = size.width * 0.5 + (animationValue * 50 - 25);
+    final centerY = size.height * 0.5 + (animationValue * 30 - 15);
+
+    // Circle 1
+    paint.color = const Color(0xFFA5D6A7).withOpacity(0.05);
+    canvas.drawCircle(Offset(centerX - 200, centerY - 100), 150, paint);
+
+    // Circle 2
+    paint.color = const Color(0xFF81C784).withOpacity(0.05);
+    canvas.drawCircle(Offset(centerX + 200, centerY + 100), 200, paint);
+
+    // Circle 3
+    paint.color = const Color(0xFF2C3E50).withOpacity(0.02);
+    canvas.drawCircle(
+      Offset(size.width * 0.8, size.height * 0.2),
+      100 + (animationValue * 20),
+      paint,
+    );
+
+    // Circle 4
+    paint.color = const Color(0xFF2C8A98).withOpacity(0.03);
+    canvas.drawCircle(
+      Offset(size.width * 0.2, size.height * 0.8),
+      120 - (animationValue * 20),
+      paint,
     );
   }
 
-  Widget _buildSpecRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label.toUpperCase(),
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-              letterSpacing: 1,
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
+  @override
+  bool shouldRepaint(covariant _BackgroundPainter oldDelegate) {
+    return oldDelegate.animationValue != animationValue;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'desktop_product_card.dart';
 import '../../models/data_models.dart';
-import '../quick_view_dialog.dart';
 
 class DesktopPerfectMatchSection extends StatefulWidget {
   const DesktopPerfectMatchSection({super.key});
@@ -187,7 +187,7 @@ class _DesktopPerfectMatchSectionState
                   return Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: _MatchCard(product: product),
+                      child: DesktopProductCard(product: product),
                     ),
                   );
                 }).toList(),
@@ -246,182 +246,6 @@ class _DesktopPerfectMatchSectionState
           border: Border.all(color: Colors.grey.shade200),
         ),
         child: Icon(icon, color: const Color(0xFF1E2832), size: 20),
-      ),
-    );
-  }
-}
-
-class _MatchCard extends StatefulWidget {
-  final ProductItem product;
-
-  const _MatchCard({required this.product});
-
-  @override
-  State<_MatchCard> createState() => _MatchCardState();
-}
-
-class _MatchCardState extends State<_MatchCard> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        transform: Matrix4.identity()
-          ..translate(0.0, _isHovered ? -10.0 : 0.0)
-          ..rotateZ(_isHovered ? -0.02 : 0.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: _isHovered ? const Color(0xFF9C27B0) : Colors.grey.shade200,
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(_isHovered ? 0.15 : 0.05),
-              blurRadius: _isHovered ? 25 : 10,
-              offset: Offset(0, _isHovered ? 12 : 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image Section
-            Stack(
-              children: [
-                Container(
-                  height: 220,
-                  decoration: BoxDecoration(
-                    color: widget.product.bgColor,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                    ),
-                    child: Image.network(
-                      widget.product.image,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                // Match Badge
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF9C27B0), Color(0xFFE91E63)],
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(Icons.favorite, color: Colors.white, size: 12),
-                        SizedBox(width: 4),
-                        Text(
-                          "95% Match",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Quick View
-                if (_isHovered)
-                  Positioned(
-                    bottom: 12,
-                    right: 12,
-                    child: GestureDetector(
-                      onTap: () => showQuickViewDialog(context, widget.product),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.remove_red_eye_outlined,
-                          size: 18,
-                          color: Color(0xFF1E2832),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-
-            // Product Details
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.product.title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1E2832),
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        "₹${widget.product.currentPrice.toStringAsFixed(0)}",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF9C27B0),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        "₹${widget.product.oldPrice.toStringAsFixed(0)}",
-                        style: TextStyle(
-                          fontSize: 13,
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey.shade400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
