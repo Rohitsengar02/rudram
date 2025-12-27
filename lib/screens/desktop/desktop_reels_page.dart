@@ -23,6 +23,9 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
   late AnimationController _lightBeamController;
   late ScrollController _mainScrollController;
   final List<VideoPlayerController> _videoControllers = [];
+  bool _isMuted = false;
+  bool _isPaused = false;
+  bool _isDarkMode = false; // Local Dark Mode state for Reels
 
   final List<Map<String, String>> reels = [
     {
@@ -106,7 +109,7 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
     _mainScrollController = ScrollController();
     _bubbleController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 15),
     )..repeat();
     _lightBeamController = AnimationController(
       vsync: this,
@@ -119,10 +122,12 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
         Uri.parse(reel['video']!),
       );
       controller.setLooping(true);
-      controller.setVolume(1.0); // Sound ON
+      controller.setVolume(_isMuted ? 0.0 : 1.0); // Sound ON
       _videoControllers.add(controller);
       controller.initialize().then((_) {
-        if (mounted && _videoControllers.indexOf(controller) == _currentIndex) {
+        if (mounted &&
+            _videoControllers.indexOf(controller) == _currentIndex &&
+            !_isPaused) {
           controller.play();
         }
         setState(() {});
@@ -171,27 +176,62 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
     _videoControllers[_currentIndex].pause();
     setState(() => _currentIndex = newIndex);
     // Play next video
-    _videoControllers[_currentIndex].play();
+    if (!_isPaused) {
+      _videoControllers[_currentIndex].play();
+    }
+  }
+
+  void _togglePlay() {
+    setState(() {
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        _videoControllers[_currentIndex].pause();
+      } else {
+        _videoControllers[_currentIndex].play();
+      }
+    });
+  }
+
+  void _toggleMute() {
+    setState(() {
+      _isMuted = !_isMuted;
+      for (var controller in _videoControllers) {
+        controller.setVolume(_isMuted ? 0.0 : 1.0);
+      }
+    });
+  }
+
+  void _toggleDarkMode() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    Color scaffoldBg = _isDarkMode
+        ? const Color(0xFF0F172A)
+        : const Color(0xFFF8FAFC);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Dark Luxury Theme
+      backgroundColor: scaffoldBg,
       body: Stack(
         children: [
-          // Background Glow
+          // Background Color
+          Positioned.fill(child: Container(color: scaffoldBg)),
+
+          // Animated Bubble Background
           Positioned.fill(
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment.center,
-                  radius: 1.5,
-                  colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
-                ),
-              ),
+            child: AnimatedBuilder(
+              animation: _bubbleController,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: BubblePainter(_bubbleController.value, _isDarkMode),
+                );
+              },
             ),
           ),
+
           WebSmoothScroll(
             controller: _mainScrollController,
             child: SingleChildScrollView(
@@ -226,6 +266,7 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
                                     screenHeight,
                                     thumbHeight,
                                     reefHeight,
+                                    !_isDarkMode, // pass isLight flag
                                   ),
                                 );
                               },
@@ -311,7 +352,7 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
                                               onPageChanged:
                                                   _onRightPageChanged,
                                               enableInfiniteScroll: true,
-                                              autoPlay: true,
+                                              autoPlay: !_isPaused,
                                               autoPlayInterval: const Duration(
                                                 seconds: 8,
                                               ),
@@ -376,9 +417,10 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
           boxShadow: [
             if (isSelected)
               BoxShadow(
-                color: const Color(0xFF38BDF8).withOpacity(0.5),
-                blurRadius: 20,
-                spreadRadius: 2,
+                color: const Color(
+                  0xFF38BDF8,
+                ).withOpacity(_isDarkMode ? 0.5 : 0.3),
+                blurRadius: 15,
               ),
           ],
         ),
@@ -392,101 +434,165 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
 
   Widget _buildCurrentItemInfo(double screenWidth) {
     final currentReel = reels[_currentIndex];
+    final textColor = _isDarkMode ? Colors.white : const Color(0xFF1E293B);
+    final subtextColor = _isDarkMode ? Colors.white70 : const Color(0xFF64748B);
+    final cardColor = _isDarkMode
+        ? Colors.black.withOpacity(0.4)
+        : Colors.white.withOpacity(0.4);
 
-    return Container(
-      width: screenWidth * 0.22,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Container(
-                height: 40,
-                width: 3,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF38BDF8),
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF38BDF8).withOpacity(0.5),
-                      blurRadius: 10,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      currentReel['title']!.toUpperCase(),
-                      style: GoogleFonts.outfit(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                    Text(
-                      currentReel['subtitle']!,
-                      style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        color: Colors.white.withOpacity(0.6),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Text(
-            "${currentReel['likes']} Likes • ${currentReel['comments']} Comments",
-            style: GoogleFonts.outfit(
-              fontSize: 12,
-              color: const Color(0xFF38BDF8),
-              fontWeight: FontWeight.w600,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          width: screenWidth * 0.22,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(25),
+            border: Border.all(
+              color: _isDarkMode
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.white.withOpacity(0.5),
             ),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20),
+            ],
           ),
-          const SizedBox(height: 30),
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildIconAction(Icons.favorite_outline),
-              const SizedBox(width: 20),
-              _buildIconAction(Icons.info_outline),
-              const SizedBox(width: 20),
-              _buildIconAction(Icons.share_outlined),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF38BDF8),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF38BDF8).withOpacity(0.3),
-                      blurRadius: 15,
+              Row(
+                children: [
+                  Container(
+                    height: 40,
+                    width: 3,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF38BDF8),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                  ],
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          currentReel['title']!.toUpperCase(),
+                          style: GoogleFonts.outfit(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        Text(
+                          currentReel['subtitle']!,
+                          style: GoogleFonts.outfit(
+                            fontSize: 14,
+                            color: subtextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Text(
+                "${currentReel['likes']} Likes • ${currentReel['comments']} Comments",
+                style: GoogleFonts.outfit(
+                  fontSize: 12,
+                  color: const Color(0xFF38BDF8),
+                  fontWeight: FontWeight.w600,
                 ),
-                child: const Icon(
-                  Icons.play_arrow_rounded,
-                  color: Colors.white,
-                  size: 28,
-                ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  _buildIconAction(Icons.favorite_outline),
+                  const SizedBox(width: 15),
+
+                  // Theme Toggle
+                  InkWell(
+                    onTap: _toggleDarkMode,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.orangeAccent.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _isDarkMode
+                            ? Icons.wb_sunny_rounded
+                            : Icons.nightlight_round,
+                        color: _isDarkMode
+                            ? Colors.orangeAccent
+                            : Colors.indigoAccent,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // Controls Section
+                  InkWell(
+                    onTap: _toggleMute,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _isMuted
+                            ? Icons.volume_off_rounded
+                            : Icons.volume_up_rounded,
+                        color: Colors.blueAccent,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    onTap: _togglePlay,
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF38BDF8),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF38BDF8).withOpacity(0.3),
+                            blurRadius: 15,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        _isPaused
+                            ? Icons.play_arrow_rounded
+                            : Icons.pause_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildIconAction(IconData icon) {
-    return Icon(icon, color: Colors.white.withOpacity(0.4), size: 22);
+    return Icon(
+      icon,
+      color: _isDarkMode ? Colors.white38 : const Color(0xFF94A3B8),
+      size: 22,
+    );
   }
 
   Widget _buildReelCard(
@@ -500,72 +606,186 @@ class _DesktopReelsPageState extends State<DesktopReelsPage>
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: _isDarkMode
+            ? Colors.black.withOpacity(0.2)
+            : Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(
+          color: _isDarkMode
+              ? Colors.white.withOpacity(0.1)
+              : Colors.white.withOpacity(0.4),
+        ),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 30),
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20),
         ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            if (controller.value.isInitialized)
-              VideoPlayer(controller)
-            else
-              Image.network(reel['thumbnail']!, fit: BoxFit.cover),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Starts From",
-                          style: GoogleFonts.outfit(
-                            fontSize: 10,
-                            color: Colors.white70,
-                          ),
-                        ),
-                        Text(
-                          reel['price']!,
-                          style: GoogleFonts.outfit(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (controller.value.isInitialized)
+                VideoPlayer(controller)
+              else
+                Image.network(reel['thumbnail']!, fit: BoxFit.cover),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.6),
                       ],
                     ),
-                    const Icon(
-                      Icons.shopping_bag_outlined,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                  ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Starts From",
+                            style: GoogleFonts.outfit(
+                              fontSize: 10,
+                              color: Colors.white70,
+                            ),
+                          ),
+                          Text(
+                            reel['price']!,
+                            style: GoogleFonts.outfit(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Icon(
+                        Icons.shopping_bag_outlined,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+class BubblePainter extends CustomPainter {
+  final double animationValue;
+  final bool isDarkMode;
+
+  BubblePainter(this.animationValue, this.isDarkMode);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // 3D Corner Bubble 1 (Top Left) - Soft Blue
+    _draw3DSphere(
+      canvas,
+      Offset(size.width * 0.1, size.height * 0.1),
+      180,
+      const Color(0xFF60A5FA),
+      animationValue,
+    );
+
+    // 3D Corner Bubble 2 (Bottom Right) - Soft Pink
+    _draw3DSphere(
+      canvas,
+      Offset(size.width * 0.9, size.height * 0.85),
+      250,
+      const Color(0xFFF472B6),
+      -animationValue, // Rotate opposite direction
+    );
+
+    // 3D Corner Bubble 3 (Top Right) - Soft Purple/Indigo
+    _draw3DSphere(
+      canvas,
+      Offset(size.width * 0.85, size.height * 0.15),
+      120,
+      const Color(0xFF818CF8),
+      animationValue * 0.8,
+    );
+
+    // 3D Corner Bubble 4 (Bottom Left) - Soft Cyan/Teal
+    _draw3DSphere(
+      canvas,
+      Offset(size.width * 0.15, size.height * 0.8),
+      140,
+      const Color(0xFF2DD4BF),
+      animationValue * 1.2,
+    );
+  }
+
+  void _draw3DSphere(
+    Canvas canvas,
+    Offset center,
+    double radius,
+    Color color,
+    double anim,
+  ) {
+    final rect = Rect.fromCircle(center: center, radius: radius);
+
+    // Dynamic light focus point
+    double angle = anim * 2 * math.pi;
+
+    // Base Gradient (The Body)
+    final basePaint = Paint()
+      ..shader = RadialGradient(
+        center: Alignment.center,
+        radius: 1.0,
+        colors: [
+          color.withOpacity(isDarkMode ? 0.1 : 0.15),
+          color.withOpacity(isDarkMode ? 0.02 : 0.05),
+          Colors.transparent,
+        ],
+      ).createShader(rect);
+    canvas.drawCircle(center, radius, basePaint);
+
+    // 3D Highlight (The "Glow")
+    final highlightPaint = Paint()
+      ..shader = RadialGradient(
+        center: Alignment.center,
+        focal: Alignment(math.cos(angle) * 0.5, math.sin(angle) * 0.5),
+        focalRadius: 0.1,
+        radius: 0.8,
+        colors: [
+          Colors.white.withOpacity(isDarkMode ? 0.1 : 0.2),
+          color.withOpacity(0.0),
+        ],
+      ).createShader(rect);
+    canvas.drawCircle(center, radius, highlightPaint);
+
+    // Internal Shimmer (Depth/3D Effect)
+    final shimmerPaint = Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.3, -0.3),
+        radius: 0.6,
+        colors: [
+          Colors.white.withOpacity(isDarkMode ? 0.05 : 0.1),
+          Colors.transparent,
+        ],
+      ).createShader(rect)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
+    canvas.drawCircle(center, radius, shimmerPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
 class ProjectionPainter extends CustomPainter {
@@ -574,6 +794,7 @@ class ProjectionPainter extends CustomPainter {
   final double screenHeight;
   final double thumbHeight;
   final double reelHeight;
+  final bool isLight;
 
   ProjectionPainter(
     this.animation,
@@ -581,6 +802,7 @@ class ProjectionPainter extends CustomPainter {
     this.screenHeight,
     this.thumbHeight,
     this.reelHeight,
+    this.isLight,
   );
 
   @override
@@ -607,8 +829,8 @@ class ProjectionPainter extends CustomPainter {
       ..shader =
           LinearGradient(
             colors: [
-              const Color(0xFF38BDF8).withOpacity(0.08),
-              const Color(0xFF38BDF8).withOpacity(0.02),
+              const Color(0xFF38BDF8).withOpacity(isLight ? 0.05 : 0.08),
+              const Color(0xFF38BDF8).withOpacity(isLight ? 0.01 : 0.02),
               Colors.transparent,
             ],
           ).createShader(
@@ -620,9 +842,7 @@ class ProjectionPainter extends CustomPainter {
 
     // Glowing border on the left
     final borderPaint = Paint()
-      ..color = const Color(
-        0xFF38BDF8,
-      ).withOpacity(0.6 + (math.sin(animation * math.pi) * 0.2))
+      ..color = const Color(0xFF38BDF8).withOpacity(isLight ? 0.2 : 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
@@ -640,7 +860,7 @@ class ProjectionPainter extends CustomPainter {
           LinearGradient(
             colors: [
               Colors.transparent,
-              Colors.white.withOpacity(0.1),
+              Colors.white.withOpacity(isLight ? 0.15 : 0.1),
               Colors.transparent,
             ],
             stops: [
