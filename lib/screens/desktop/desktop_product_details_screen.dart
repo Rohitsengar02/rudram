@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../models/data_models.dart';
 import '../../utils/app_colors.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/rooms_provider.dart';
 import '../../widgets/cart_sidebar.dart';
 import '../../widgets/desktop/desktop_header.dart';
 import '../../widgets/desktop/desktop_footer_section.dart';
@@ -101,6 +102,73 @@ class _DesktopProductDetailsScreenState
         behavior: SnackBarBehavior.floating,
         width: 300,
       ),
+    );
+  }
+
+  void _showRoomSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final rooms = context.watch<RoomsProvider>().rooms;
+        return AlertDialog(
+          backgroundColor: const Color(0xFF111111),
+          title: const Text(
+            "SELECT A ROOM",
+            style: TextStyle(color: Color(0xFFD4AF37), letterSpacing: 2),
+          ),
+          content: rooms.isEmpty
+              ? const Text(
+                  "No rooms found. Go to Rooms page to create one.",
+                  style: TextStyle(color: Colors.white70),
+                )
+              : SizedBox(
+                  width: 400,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: rooms.length,
+                    itemBuilder: (context, index) {
+                      final room = rooms[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(room.image),
+                        ),
+                        title: Text(
+                          room.name,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        onTap: () {
+                          context.read<RoomsProvider>().addProductToRoom(
+                            room.id,
+                            widget.product,
+                          );
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Added to ${room.name}!",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              backgroundColor: const Color(0xFFD4AF37),
+                              behavior: SnackBarBehavior.floating,
+                              width: 300,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                "CANCEL",
+                style: TextStyle(color: Colors.white54),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -436,6 +504,33 @@ class _DesktopProductDetailsScreenState
                                       fontWeight: FontWeight.bold,
                                       decoration: TextDecoration.underline,
                                       fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                OutlinedButton.icon(
+                                  onPressed: _showRoomSelectionDialog,
+                                  icon: const Icon(
+                                    Icons.meeting_room_outlined,
+                                    size: 16,
+                                  ),
+                                  label: const Text("ADD TO ROOM"),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: const Color(0xFFD4AF37),
+                                    side: const BorderSide(
+                                      color: Color(0xFFD4AF37),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 15,
+                                      horizontal: 20,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      letterSpacing: 1,
                                     ),
                                   ),
                                 ),

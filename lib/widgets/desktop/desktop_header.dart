@@ -11,18 +11,29 @@ import '../../screens/desktop/desktop_reels_page.dart';
 class DesktopHeader extends StatelessWidget {
   final int cartCount;
   final VoidCallback? onCartTap;
+  final bool isDark;
 
-  const DesktopHeader({super.key, this.cartCount = 0, this.onCartTap});
+  const DesktopHeader({
+    super.key,
+    this.cartCount = 0,
+    this.onCartTap,
+    this.isDark = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    Color bgColor = isDark ? const Color(0xFF070707) : Colors.white;
+    Color textColor = isDark ? Colors.white : const Color(0xFF333333);
+    Color iconColor = isDark ? Colors.white : Colors.black87;
+    Color searchBg = isDark ? const Color(0xFF1A1A1A) : const Color(0xFFF8F9FA);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: bgColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.02),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -36,13 +47,28 @@ class DesktopHeader extends StatelessWidget {
           const SizedBox(width: 40),
 
           // 2. Navigation Links
-          _buildNavLink(context, 'Shop', isShop: true),
-          _buildNavLink(context, 'Products', isProducts: true),
-          _buildNavLink(context, 'Rooms', isRooms: true),
-          _buildNavLink(context, 'Inspiration', isInspiration: true),
-          _buildNavLink(context, 'Latest', isLatest: true),
-          _buildNavLink(context, 'Reels', isReels: true),
-          _buildNavLink(context, 'Info', isInfo: true),
+          _buildNavLink(context, 'Shop', isShop: true, textColor: textColor),
+          _buildNavLink(
+            context,
+            'Products',
+            isProducts: true,
+            textColor: textColor,
+          ),
+          _buildNavLink(context, 'Rooms', isRooms: true, textColor: textColor),
+          _buildNavLink(
+            context,
+            'Inspiration',
+            isInspiration: true,
+            textColor: textColor,
+          ),
+          _buildNavLink(
+            context,
+            'Latest',
+            isLatest: true,
+            textColor: textColor,
+          ),
+          _buildNavLink(context, 'Reels', isReels: true, textColor: textColor),
+          _buildNavLink(context, 'Info', isInfo: true, textColor: textColor),
 
           const SizedBox(width: 40),
 
@@ -51,23 +77,28 @@ class DesktopHeader extends StatelessWidget {
             child: Container(
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
+                color: searchBg,
                 borderRadius: BorderRadius.circular(22),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 16),
-                    child: Icon(Icons.search, size: 20, color: Colors.black54),
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Icon(
+                      Icons.search,
+                      size: 20,
+                      color: isDark ? Colors.white54 : Colors.black54,
+                    ),
                   ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: TextField(
+                        style: TextStyle(color: textColor),
                         decoration: InputDecoration(
                           hintText: 'What are you looking for?',
                           hintStyle: TextStyle(
-                            color: Colors.black38,
+                            color: isDark ? Colors.white24 : Colors.black38,
                             fontSize: 14,
                           ),
                           border: InputBorder.none,
@@ -83,11 +114,14 @@ class DesktopHeader extends StatelessWidget {
           const SizedBox(width: 40),
 
           // 4. Action Icons
-          _buildActionIcon(Icons.person_outline),
+          _buildActionIcon(Icons.person_outline, color: iconColor),
           const SizedBox(width: 24),
-          _buildActionIcon(Icons.favorite_outline),
+          _buildActionIcon(Icons.favorite_outline, color: iconColor),
           const SizedBox(width: 24),
-          InkWell(onTap: onCartTap, child: _buildCartIcon()),
+          InkWell(
+            onTap: onCartTap,
+            child: _buildCartIcon(iconColor: iconColor),
+          ),
         ],
       ),
     );
@@ -146,6 +180,7 @@ class DesktopHeader extends StatelessWidget {
     bool isLatest = false,
     bool isReels = false,
     bool isInfo = false,
+    required Color textColor,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -203,8 +238,8 @@ class DesktopHeader extends StatelessWidget {
         },
         child: Text(
           title,
-          style: const TextStyle(
-            color: Color(0xFF333333),
+          style: TextStyle(
+            color: textColor,
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -213,19 +248,15 @@ class DesktopHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildActionIcon(IconData icon) {
-    return Icon(icon, size: 24, color: Colors.black87);
+  Widget _buildActionIcon(IconData icon, {required Color color}) {
+    return Icon(icon, size: 24, color: color);
   }
 
-  Widget _buildCartIcon() {
+  Widget _buildCartIcon({required Color iconColor}) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        const Icon(
-          Icons.shopping_bag_outlined,
-          size: 24,
-          color: Colors.black87,
-        ),
+        Icon(Icons.shopping_bag_outlined, size: 24, color: iconColor),
         Positioned(
           right: -4,
           top: -2,
