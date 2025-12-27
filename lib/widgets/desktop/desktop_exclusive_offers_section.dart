@@ -6,101 +6,110 @@ class DesktopExclusiveOffersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Exclusive Collection",
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1E2832),
-              letterSpacing: 0.5,
-            ),
-          ),
-          const SizedBox(height: 40),
-          SizedBox(
-            height: 600,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // 1. Left Vertical - SHOP RINGS (Video)
-                Expanded(
-                  flex: 3,
-                  child: _VideoBannerCard(
-                    title: "SHOP RINGS",
-                    videoUrl:
-                        "https://v1.pinimg.com/videos/mc/720p/bd/1f/61/bd1f61106e313044434aa2f8a9d872ae.mp4",
-                  ),
-                ),
-                const SizedBox(width: 20),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Dynamic height calculation: Scale with width but cap at 600px
+        double sectionHeight = constraints.maxWidth * 0.45;
+        if (sectionHeight > 600) sectionHeight = 600;
+        if (sectionHeight < 400) sectionHeight = 400;
 
-                // 2. Middle Column
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    children: [
-                      // Middle Top - SHOP BRACELETS (Horizontal)
-                      Expanded(
-                        flex: 1,
-                        child: _ImageBannerCard(
-                          title: "SHOP BRACELETS",
-                          imageUrl:
-                              "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/71/6a/8b/716a8b16f3d1e1f7d2f9d8f9f8f9f8f9.jpg", // Placeholder high quality
-                          fallbackUrl:
-                              "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800",
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // Middle Bottom - Shop Necklaces & Shop Earrings (Two Squares)
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _ImageBannerCard(
-                                title: "SHOP NECKLACES",
-                                imageUrl:
-                                    "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/c1/8c/d1/c18cd1b1c1b1c1b1c1b1c1b1c1b1c1b1.jpg",
-                                fallbackUrl:
-                                    "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=800",
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: _ImageBannerCard(
-                                title: "SHOP EARRINGS",
-                                imageUrl:
-                                    "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/e1/8e/d1/e18ed1e1e1e1e1e1e1e1e1e1e1e1e1e1.jpg",
-                                fallbackUrl:
-                                    "https://images.unsplash.com/photo-1635767798638-3e25273a8236?w=800",
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Exclusive Collection",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E2832),
+                  letterSpacing: 0.5,
                 ),
-                const SizedBox(width: 20),
+              ),
+              const SizedBox(height: 40),
+              SizedBox(
+                height: sectionHeight,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // 1. Left Vertical - SHOP RINGS (Video)
+                    Expanded(
+                      flex: 3,
+                      child: _VideoBannerCard(
+                        title: "SHOP RINGS",
+                        videoUrl:
+                            "https://v1.pinimg.com/videos/mc/720p/bd/1f/61/bd1f61106e313044434aa2f8a9d872ae.mp4",
+                      ),
+                    ),
+                    const SizedBox(width: 20),
 
-                // 3. Right Vertical - SHOP CHARM (Video)
-                Expanded(
-                  flex: 3,
-                  child: _VideoBannerCard(
-                    title: "SHOP CHARM",
-                    videoUrl:
-                        "https://v1.pinimg.com/videos/mc/720p/c2/0d/33/c20d334a9bfe93f8e9b6be3615c0c5a3.mp4",
-                  ),
+                    // 2. Middle Column
+                    Expanded(
+                      flex: 4,
+                      child: Column(
+                        children: [
+                          // Middle Top - SHOP BRACELETS (Horizontal)
+                          Expanded(
+                            flex: 1,
+                            child: _ImageBannerCard(
+                              title: "SHOP BRACELETS",
+                              imageUrl:
+                                  "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/71/6a/8b/716a8b16f3d1e1f7d2f9d8f9f8f9f8f9.jpg", // Placeholder high quality
+                              fallbackUrl:
+                                  "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800",
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          // Middle Bottom - Shop Necklaces & Shop Earrings (Two Squares)
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _ImageBannerCard(
+                                    title: "SHOP NECKLACES",
+                                    imageUrl:
+                                        "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/c1/8c/d1/c18cd1b1c1b1c1b1c1b1c1b1c1b1c1b1.jpg",
+                                    fallbackUrl:
+                                        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=800",
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: _ImageBannerCard(
+                                    title: "SHOP EARRINGS",
+                                    imageUrl:
+                                        "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/e1/8e/d1/e18ed1e1e1e1e1e1e1e1e1e1e1e1e1e1.jpg",
+                                    fallbackUrl:
+                                        "https://images.unsplash.com/photo-1635767798638-3e25273a8236?w=800",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+
+                    // 3. Right Vertical - SHOP CHARM (Video)
+                    Expanded(
+                      flex: 3,
+                      child: _VideoBannerCard(
+                        title: "SHOP CHARM",
+                        videoUrl:
+                            "https://v1.pinimg.com/videos/mc/720p/c2/0d/33/c20d334a9bfe93f8e9b6be3615c0c5a3.mp4",
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -148,9 +157,15 @@ class _VideoBannerCardState extends State<_VideoBannerCard> {
           fit: StackFit.expand,
           children: [
             if (_controller.value.isInitialized)
-              AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+              SizedBox.expand(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: _controller.value.size.width,
+                    height: _controller.value.size.height,
+                    child: VideoPlayer(_controller),
+                  ),
+                ),
               )
             else
               Container(color: const Color(0xFFF5F5F5)),

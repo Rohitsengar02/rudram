@@ -6,6 +6,7 @@ import '../../screens/desktop/desktop_rooms_page.dart';
 import '../../screens/desktop/desktop_inspiration_page.dart';
 import '../../screens/desktop/desktop_latest_page.dart';
 import '../../screens/desktop/desktop_info_page.dart';
+import '../../screens/desktop/desktop_reels_page.dart';
 
 class DesktopHeader extends StatelessWidget {
   final int cartCount;
@@ -40,6 +41,7 @@ class DesktopHeader extends StatelessWidget {
           _buildNavLink(context, 'Rooms', isRooms: true),
           _buildNavLink(context, 'Inspiration', isInspiration: true),
           _buildNavLink(context, 'Latest', isLatest: true),
+          _buildNavLink(context, 'Reels', isReels: true),
           _buildNavLink(context, 'Info', isInfo: true),
 
           const SizedBox(width: 40),
@@ -142,6 +144,7 @@ class DesktopHeader extends StatelessWidget {
     bool isRooms = false,
     bool isInspiration = false,
     bool isLatest = false,
+    bool isReels = false,
     bool isInfo = false,
   }) {
     return Padding(
@@ -159,6 +162,8 @@ class DesktopHeader extends StatelessWidget {
             targetPage = const DesktopInspirationPage();
           } else if (isLatest) {
             targetPage = const DesktopLatestPage();
+          } else if (isReels) {
+            targetPage = const DesktopReelsPage();
           } else if (isInfo) {
             targetPage = const DesktopInfoPage();
           }

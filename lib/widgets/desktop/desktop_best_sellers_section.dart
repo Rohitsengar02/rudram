@@ -65,7 +65,7 @@ class _DesktopBestSellersSectionState extends State<DesktopBestSellersSection> {
       children: [
         // Header
         Padding(
-          padding: const EdgeInsets.only(bottom: 30, left: 15, right: 15),
+          padding: const EdgeInsets.only(bottom: 50, left: 15, right: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -95,31 +95,40 @@ class _DesktopBestSellersSectionState extends State<DesktopBestSellersSection> {
         ),
 
         // Carousel content
-        CarouselSlider.builder(
-          carouselController: _carouselController,
-          itemCount: (products.length / 5).ceil(),
-          options: CarouselOptions(
-            height: 380,
-            viewportFraction: 1.0,
-            enableInfiniteScroll: true,
-            autoPlay: false,
-          ),
-          itemBuilder: (context, index, realIndex) {
-            final int start = index * 5;
-            return Row(
-              children: List.generate(5, (i) {
-                final int currentIdx = start + i;
-                if (currentIdx < products.length) {
-                  return Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
-                      child: _BestSellerCard(product: products[currentIdx]),
-                    ),
-                  );
-                } else {
-                  return const Expanded(child: SizedBox());
-                }
-              }),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            // Calculate item width based on 5 items per row with 20px spacing (4 gaps = 80px total)
+            final double itemWidth = (constraints.maxWidth - 80) / 5;
+            // Height = Image height (aspect ratio 1) + Text area (approx 100px + extra buffer)
+            final double dynamicHeight = itemWidth + 110;
+
+            return CarouselSlider.builder(
+              carouselController: _carouselController,
+              itemCount: (products.length / 5).ceil(),
+              options: CarouselOptions(
+                height: dynamicHeight,
+                viewportFraction: 1.0,
+                enableInfiniteScroll: true,
+                autoPlay: false,
+              ),
+              itemBuilder: (context, index, realIndex) {
+                final int start = index * 5;
+                return Row(
+                  children: List.generate(5, (i) {
+                    final int currentIdx = start + i;
+                    if (currentIdx < products.length) {
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
+                          child: _BestSellerCard(product: products[currentIdx]),
+                        ),
+                      );
+                    } else {
+                      return const Expanded(child: SizedBox());
+                    }
+                  }),
+                );
+              },
             );
           },
         ),

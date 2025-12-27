@@ -69,34 +69,45 @@ class _DesktopFlashSaleSectionState extends State<DesktopFlashSaleSection> {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider.builder(
-      carouselController: _carouselController,
-      itemCount: (products.length / 5).ceil(),
-      options: CarouselOptions(
-        height: 380,
-        viewportFraction: 1.0,
-        enableInfiniteScroll: true,
-        autoPlay: false,
-        autoPlayInterval: const Duration(seconds: 3),
-        autoPlayAnimationDuration: const Duration(milliseconds: 800),
-        autoPlayCurve: Curves.fastOutSlowIn,
-      ),
-      itemBuilder: (context, index, realIndex) {
-        final int start = index * 5;
-        return Row(
-          children: List.generate(5, (i) {
-            final int currentIdx = start + i;
-            if (currentIdx < products.length) {
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
-                  child: _DesktopFlashSaleCard(product: products[currentIdx]),
-                ),
-              );
-            } else {
-              return const Expanded(child: SizedBox());
-            }
-          }),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate item width based on 5 items per row with 20px spacing (4 gaps = 80px total)
+        final double itemWidth = (constraints.maxWidth - 80) / 5;
+        // Height = Image height (aspect ratio 1) + Text area (approx 100px + extra buffer)
+        final double dynamicHeight = itemWidth + 110;
+
+        return CarouselSlider.builder(
+          carouselController: _carouselController,
+          itemCount: (products.length / 5).ceil(),
+          options: CarouselOptions(
+            height: dynamicHeight,
+            viewportFraction: 1.0,
+            enableInfiniteScroll: true,
+            autoPlay: false,
+            autoPlayInterval: const Duration(seconds: 3),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+          ),
+          itemBuilder: (context, index, realIndex) {
+            final int start = index * 5;
+            return Row(
+              children: List.generate(5, (i) {
+                final int currentIdx = start + i;
+                if (currentIdx < products.length) {
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: i == 4 ? 0 : 20),
+                      child: _DesktopFlashSaleCard(
+                        product: products[currentIdx],
+                      ),
+                    ),
+                  );
+                } else {
+                  return const Expanded(child: SizedBox());
+                }
+              }),
+            );
+          },
         );
       },
     );

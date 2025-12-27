@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '../../models/data_models.dart';
 import '../../widgets/desktop/desktop_header.dart';
 import '../../widgets/desktop/desktop_footer_section.dart';
@@ -13,6 +14,20 @@ class DesktopLuxuryProductsPage extends StatefulWidget {
 }
 
 class _DesktopLuxuryProductsPageState extends State<DesktopLuxuryProductsPage> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   final List<ProductItem> luxuryProducts = [
     const ProductItem(
       title: "Royal Emerald Diamond Set",
@@ -68,126 +83,136 @@ class _DesktopLuxuryProductsPageState extends State<DesktopLuxuryProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A), // Dark Luxury Background
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const DesktopHeader(),
+      body: WebSmoothScroll(
+        controller: _scrollController,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              const DesktopHeader(),
 
-            // Luxury Hero Section
-            Container(
-              width: double.infinity,
-              height: 500,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/71/34/04/713404787d5ac88c7d7e63b355d0e882.jpg",
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      const Color(0xFF0F172A),
-                      const Color(0xFF0F172A).withOpacity(0.3),
-                      Colors.transparent,
-                    ],
+              // Luxury Hero Section
+              Container(
+                width: double.infinity,
+                height: 500,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/71/34/04/713404787d5ac88c7d7e63b355d0e882.jpg",
+                    ),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "THE ROYAL SELECTION",
-                        style: TextStyle(
-                          fontSize: 16,
-                          letterSpacing: 8,
-                          color: Color(0xFFE2E8F0),
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Luxury Redefined",
-                        style: TextStyle(
-                          fontSize: 64,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontFamily: 'Playfair Display', // Premium font feel
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 1),
-                        ),
-                        child: const Text(
-                          "EXPLORE MASTERPIECES",
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        const Color(0xFF0F172A),
+                        const Color(0xFF0F172A).withOpacity(0.3),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "THE ROYAL SELECTION",
                           style: TextStyle(
-                            color: Colors.white,
-                            letterSpacing: 2,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            letterSpacing: 8,
+                            color: Color(0xFFE2E8F0),
+                            fontWeight: FontWeight.w300,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                        const Text(
+                          "Luxury Redefined",
+                          style: TextStyle(
+                            fontSize: 64,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontFamily: 'Playfair Display', // Premium font feel
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40,
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: const Text(
+                            "EXPLORE MASTERPIECES",
+                            style: TextStyle(
+                              color: Colors.white,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            // Products Grid
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 80),
-              child: Column(
-                children: [
-                  const Row(
-                    children: [
-                      Text(
-                        "Curated Collections",
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              // Products Grid
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 80,
+                  vertical: 80,
+                ),
+                child: Column(
+                  children: [
+                    const Row(
+                      children: [
+                        Text(
+                          "Curated Collections",
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Spacer(),
-                      Text(
-                        "Total 06 Items",
-                        style: TextStyle(color: Colors.grey, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 60),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.8,
-                          crossAxisSpacing: 40,
-                          mainAxisSpacing: 60,
+                        Spacer(),
+                        Text(
+                          "Total 06 Items",
+                          style: TextStyle(color: Colors.grey, fontSize: 14),
                         ),
-                    itemCount: luxuryProducts.length,
-                    itemBuilder: (context, index) {
-                      return _LuxuryProductCard(product: luxuryProducts[index]);
-                    },
-                  ),
-                ],
+                      ],
+                    ),
+                    const SizedBox(height: 60),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.8,
+                            crossAxisSpacing: 40,
+                            mainAxisSpacing: 60,
+                          ),
+                      itemCount: luxuryProducts.length,
+                      itemBuilder: (context, index) {
+                        return _LuxuryProductCard(
+                          product: luxuryProducts[index],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            const DesktopFooterSection(),
-          ],
+              const DesktopFooterSection(),
+            ],
+          ),
         ),
       ),
     );

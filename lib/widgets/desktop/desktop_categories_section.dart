@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../screens/desktop/desktop_category_products_page.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 class DesktopCategoriesSection extends StatelessWidget {
   const DesktopCategoriesSection({super.key});
 
@@ -84,7 +86,20 @@ class DesktopCategoriesSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
       child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40),
+            child: Text(
+              "Shop By Category",
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1E2832),
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(
               5,
               (index) => Expanded(
@@ -94,6 +109,7 @@ class DesktopCategoriesSection extends StatelessWidget {
           ),
           const Divider(height: 1, color: Color(0xFFEEEEEE)),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(
               5,
               (index) => Expanded(
@@ -110,68 +126,122 @@ class DesktopCategoriesSection extends StatelessWidget {
     BuildContext context,
     Map<String, dynamic> category,
   ) {
+    return _CategoryItem(category: category);
+  }
+}
+
+class _CategoryItem extends StatefulWidget {
+  final Map<String, dynamic> category;
+
+  const _CategoryItem({super.key, required this.category});
+
+  @override
+  State<_CategoryItem> createState() => _CategoryItemState();
+}
+
+class _CategoryItemState extends State<_CategoryItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                DesktopCategoryProductsPage(categoryTitle: category['title']!),
+            builder: (context) => DesktopCategoryProductsPage(
+              categoryTitle: widget.category['title']!,
+            ),
           ),
         );
       },
-      child: Container(
+      onHover: (value) {
+        setState(() {
+          _isHovered = value;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          border: Border(right: BorderSide(color: Color(0xFFEEEEEE), width: 1)),
+        decoration: BoxDecoration(
+          color: _isHovered
+              ? Colors.white
+              : const Color.fromARGB(0, 255, 255, 255),
+          border: const Border(
+            right: BorderSide(color: Color(0xFFEEEEEE), width: 1),
+          ),
+          boxShadow: _isHovered
+              ? [
+                  BoxShadow(
+                    color: const Color.fromARGB(
+                      255,
+                      10,
+                      10,
+                      10,
+                    ).withOpacity(0.05),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ]
+              : [],
         ),
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    category['title']!,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF333333),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    category['items']!,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 10),
-            Container(
-              width: 56,
-              height: 56,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              width: 64,
+              height: 64,
+              transform: Matrix4.identity()..scale(_isHovered ? 1.1 : 1.0),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
-                borderRadius: BorderRadius.circular(12),
+                color: _isHovered
+                    ? const Color(0xFFF0E5FF) // Light purple tint on hover
+                    : const Color(0xFFF8F9FA),
+                borderRadius: BorderRadius.circular(50),
               ),
               clipBehavior: Clip.antiAlias,
-              child: category['imageUrl'] != null
+              child: widget.category['imageUrl'] != null
                   ? Image.network(
-                      category['imageUrl']!,
+                      widget.category['imageUrl']!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Icon(
-                        category['icon'] as IconData,
+                        widget.category['icon'] as IconData,
                         color: const Color(0xFF4F46E5),
-                        size: 24,
+                        size: 28,
                       ),
                     )
                   : Icon(
-                      category['icon'] as IconData,
+                      widget.category['icon'] as IconData,
                       color: const Color(0xFF4F46E5),
-                      size: 24,
+                      size: 28,
                     ),
+            ),
+            const SizedBox(height: 16),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: _isHovered
+                    ? const Color(0xFF4F46E5) // Premium Blue on hover
+                    : const Color(0xFF333333),
+                letterSpacing: 0.5,
+              ),
+              child: Text(
+                widget.category['title']!,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.category['items']!,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.lato(
+                fontSize: 13,
+                color: Colors.grey,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ],
         ),
