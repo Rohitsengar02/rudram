@@ -6,6 +6,7 @@ import 'screens/home_screen.dart';
 import 'providers/theme_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/orders_provider.dart';
+import 'providers/rooms_provider.dart';
 
 // Custom scroll behavior to ensure all input devices work correctly
 class AppScrollBehavior extends MaterialScrollBehavior {
@@ -36,6 +37,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => OrdersProvider()),
+        ChangeNotifierProvider(create: (_) => RoomsProvider()),
       ],
       child: const MyApp(),
     ),

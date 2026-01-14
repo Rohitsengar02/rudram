@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '../../models/data_models.dart';
 import '../../widgets/desktop/desktop_header.dart';
 import 'desktop_product_detail_page.dart';
@@ -13,6 +14,7 @@ class DesktopShopPage extends StatefulWidget {
 class _DesktopShopPageState extends State<DesktopShopPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
+  late ScrollController _scrollController;
   final List<ProductItem> shopProducts = [
     ProductItem(
       title: "Royal Emerald Diamond Set",
@@ -96,11 +98,13 @@ class _DesktopShopPageState extends State<DesktopShopPage>
       duration: const Duration(milliseconds: 1000),
     );
     _animationController.forward();
+    _scrollController = ScrollController();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -108,230 +112,237 @@ class _DesktopShopPageState extends State<DesktopShopPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header
-            const DesktopHeader(),
+      body: WebSmoothScroll(
+        controller: _scrollController,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              // Header
+              const DesktopHeader(),
 
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Left Sidebar - 2/8 Flex with Ultra-Soft Static UI
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                      border: Border(
-                        right: BorderSide(color: Colors.grey.shade50),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Left Sidebar - 2/8 Flex with Ultra-Soft Static UI
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        border: Border(
+                          right: BorderSide(color: Colors.grey.shade50),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 30,
+                        right: 20,
+                        bottom: 40,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 30),
+                              child: Text(
+                                "Filters",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF405870),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            _buildListFilter("Categories", [
+                              "Gold Jewelry",
+                              "Diamond Collection",
+                              "Silver Articles",
+                              "Gemstone Special",
+                            ]),
+                            _buildPriceFilter(),
+                            _buildListFilter("Occasion", [
+                              "Bridal",
+                              "Casual Wear",
+                              "Party Wear",
+                              "Office Wear",
+                            ]),
+                            _buildListFilter("Gender", [
+                              "Women",
+                              "Men",
+                              "Unisex",
+                              "Kids",
+                            ]),
+                            _buildListFilter("Collections", [
+                              "Royal",
+                              "Minimalist",
+                              "Antique",
+                              "Modern",
+                            ]),
+                            _buildListFilter("Metal Purity", [
+                              "14K Gold",
+                              "18K Gold",
+                              "22K Gold",
+                              "24K Gold",
+                            ]),
+                            _buildListFilter("Gemstone Type", [
+                              "Diamond",
+                              "Emerald",
+                              "Ruby",
+                              "Pearl",
+                              "Sapphire",
+                            ]),
+                            _buildColorFilter(),
+                            _buildListFilter("Availability", [
+                              "In Stock",
+                              "New Arrivals",
+                              "Pre-Order",
+                            ]),
+                            _buildRatingFilter(),
+                            _buildDiscountFilter(),
+                            const SizedBox(height: 50),
+                            Container(
+                              width: double.infinity,
+                              height: 54,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xFF4F46E5,
+                                    ).withOpacity(0.1),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF4F46E5),
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "APPLY FILTER",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                          ],
+                        ),
                       ),
                     ),
-                    padding: const EdgeInsets.only(
-                      left: 30,
-                      right: 20,
-                      bottom: 40,
-                    ),
-                    child: SingleChildScrollView(
+                  ),
+
+                  // Right Content - 70% Flex
+                  Expanded(
+                    flex: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 30),
-                            child: Text(
-                              "Filters",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF405870),
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ),
-                          _buildListFilter("Categories", [
-                            "Gold Jewelry",
-                            "Diamond Collection",
-                            "Silver Articles",
-                            "Gemstone Special",
-                          ]),
-                          _buildPriceFilter(),
-                          _buildListFilter("Occasion", [
-                            "Bridal",
-                            "Casual Wear",
-                            "Party Wear",
-                            "Office Wear",
-                          ]),
-                          _buildListFilter("Gender", [
-                            "Women",
-                            "Men",
-                            "Unisex",
-                            "Kids",
-                          ]),
-                          _buildListFilter("Collections", [
-                            "Royal",
-                            "Minimalist",
-                            "Antique",
-                            "Modern",
-                          ]),
-                          _buildListFilter("Metal Purity", [
-                            "14K Gold",
-                            "18K Gold",
-                            "22K Gold",
-                            "24K Gold",
-                          ]),
-                          _buildListFilter("Gemstone Type", [
-                            "Diamond",
-                            "Emerald",
-                            "Ruby",
-                            "Pearl",
-                            "Sapphire",
-                          ]),
-                          _buildColorFilter(),
-                          _buildListFilter("Availability", [
-                            "In Stock",
-                            "New Arrivals",
-                            "Pre-Order",
-                          ]),
-                          _buildRatingFilter(),
-                          _buildDiscountFilter(),
-                          const SizedBox(height: 50),
+                          // Banner with Image (No Text)
                           Container(
                             width: double.infinity,
-                            height: 54,
+                            height: 200,
+                            clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(
-                                    0xFF4F46E5,
-                                  ).withOpacity(0.1),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
+                              color: const Color(0xFFF0F0F0),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4F46E5),
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                              child: const Text(
-                                "APPLY FILTER",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
+                            child: Image.network(
+                              "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/18/22/ee/1822eef2f6cc34174e52b9d9e6857d33.jpg",
+                              fit: BoxFit.cover,
                             ),
                           ),
+
                           const SizedBox(height: 40),
+
+                          // Toolbar
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  _toolbarIcon(Icons.grid_view_rounded, true),
+                                  const SizedBox(width: 10),
+                                  _toolbarIcon(Icons.list_rounded, false),
+                                ],
+                              ),
+                              const Text(
+                                "SHOWING 1-9 OF 32 RESULTS",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Text(
+                                      "Sort by: Default",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    Icon(Icons.keyboard_arrow_down, size: 16),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          // Product Grid with Bottom-to-Top Animation (4 Columns)
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                                  childAspectRatio: 0.72,
+                                  crossAxisSpacing: 25,
+                                  mainAxisSpacing: 35,
+                                ),
+                            itemCount: shopProducts.length,
+                            itemBuilder: (context, index) {
+                              return _buildAnimatedProductCard(
+                                index,
+                                shopProducts[index],
+                              );
+                            },
+                          ),
+
+                          const SizedBox(height: 60),
                         ],
                       ),
                     ),
                   ),
-                ),
-
-                // Right Content - 70% Flex
-                Expanded(
-                  flex: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Banner with Image (No Text)
-                        Container(
-                          width: double.infinity,
-                          height: 200,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF0F0F0),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Image.network(
-                            "https://images.weserv.nl/?url=https://i.pinimg.com/1200x/18/22/ee/1822eef2f6cc34174e52b9d9e6857d33.jpg",
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-
-                        const SizedBox(height: 40),
-
-                        // Toolbar
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                _toolbarIcon(Icons.grid_view_rounded, true),
-                                const SizedBox(width: 10),
-                                _toolbarIcon(Icons.list_rounded, false),
-                              ],
-                            ),
-                            const Text(
-                              "SHOWING 1-9 OF 32 RESULTS",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: const Row(
-                                children: [
-                                  Text(
-                                    "Sort by: Default",
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  Icon(Icons.keyboard_arrow_down, size: 16),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        // Product Grid with Bottom-to-Top Animation (4 Columns)
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                childAspectRatio: 0.72,
-                                crossAxisSpacing: 25,
-                                mainAxisSpacing: 35,
-                              ),
-                          itemCount: shopProducts.length,
-                          itemBuilder: (context, index) {
-                            return _buildAnimatedProductCard(
-                              index,
-                              shopProducts[index],
-                            );
-                          },
-                        ),
-
-                        const SizedBox(height: 60),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

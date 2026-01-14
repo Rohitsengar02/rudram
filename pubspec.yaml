@@ -46,6 +46,8 @@ dependencies:
   image_picker: ^1.2.1
   confetti: ^0.8.0
   shared_preferences: ^2.5.4
+  google_fonts: ^6.3.3
+  web_smooth_scroll: ^1.1.0
 
 dev_dependencies:
   flutter_test:

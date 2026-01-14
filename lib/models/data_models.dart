@@ -30,6 +30,20 @@ class ProductItem {
   });
 }
 
+class Room {
+  final String id;
+  final String name;
+  final String image;
+  final List<ProductItem> products;
+
+  Room({
+    required this.id,
+    required this.name,
+    required this.image,
+    this.products = const [],
+  });
+}
+
 final List<ProductItem> globalShopProducts = [
   ProductItem(
     title: "Royal Emerald Diamond Set",

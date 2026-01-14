@@ -49,72 +49,92 @@ class _DesktopHeroSectionState extends State<DesktopHeroSection>
     return Container(
       color: const Color(0xFFF8F9FA),
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Left - Main Banner Carousel (60% width)
-            Expanded(flex: 60, child: _buildMainBanner()),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Calculate dimensions to ensure equal height
+          // Width available for the row (taking into account the container padding is handled by LayoutBuilder constraints if placed correctly,
+          // but here LayoutBuilder is CHILD of Container, so constraints.maxWidth IS the available width inside padding)
+          final availableWidth = constraints.maxWidth;
 
-            const SizedBox(width: 10),
-            // Right - Column 1 (20% width)
-            Expanded(
-              flex: 20,
-              child: Column(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 1.3,
-                    child: _buildEnhancedCard(
-                      index: 0,
-                      imageUrl: '',
-                      bgImageUrl:
-                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773995/8512716e33d20cac2f4019e1a59ce41f_kuyugk.jpg',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  AspectRatio(
-                    aspectRatio: 1.3,
-                    child: _buildEnhancedCard(
-                      index: 1,
-                      imageUrl: '',
-                      bgImageUrl:
-                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/8f2249c31350c4cb0f69dd74de9f8878_ztxcyd.jpg',
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          // Row has spacing of 10 and 10. Total 20.
+          // Flex: 60 (Left), 20 (Mid), 20 (Right)
 
-            const SizedBox(width: 10),
-            // Right - Column 2 (20% width)
-            Expanded(
-              flex: 20,
-              child: Column(
-                children: [
-                  AspectRatio(
-                    aspectRatio: 1.3,
-                    child: _buildEnhancedCard(
-                      index: 2,
-                      imageUrl: '',
-                      bgImageUrl:
-                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/d9d4b96415c4c99a2cd17c53e1e15fde_efwks7.jpg',
-                    ),
+          const double gap = 10.0;
+          final double rightColWidth = (availableWidth - (2 * gap)) * 0.20;
+
+          // Right column has 2 cards vertically with spacing 10
+          // Each card has aspect ratio 1.3
+          final double cardHeight = rightColWidth / 1.3;
+          final double totalHeight = (cardHeight * 2) + 10.0;
+
+          return SizedBox(
+            height: totalHeight,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Left - Main Banner Carousel (60% width)
+                Expanded(
+                  flex: 60,
+                  child: _buildMainBanner(height: totalHeight),
+                ),
+
+                const SizedBox(width: 10),
+                // Right - Column 1 (20% width)
+                Expanded(
+                  flex: 20,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: _buildEnhancedCard(
+                          index: 0,
+                          imageUrl: '',
+                          bgImageUrl:
+                              'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773995/8512716e33d20cac2f4019e1a59ce41f_kuyugk.jpg',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: _buildEnhancedCard(
+                          index: 1,
+                          imageUrl: '',
+                          bgImageUrl:
+                              'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/8f2249c31350c4cb0f69dd74de9f8878_ztxcyd.jpg',
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  AspectRatio(
-                    aspectRatio: 1.3,
-                    child: _buildEnhancedCard(
-                      index: 3,
-                      imageUrl: '',
-                      bgImageUrl:
-                          'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/97ce300ef56c4bcee8f351a3a037916f_bbqex9.jpg',
-                    ),
+                ),
+
+                const SizedBox(width: 10),
+                // Right - Column 2 (20% width)
+                Expanded(
+                  flex: 20,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: _buildEnhancedCard(
+                          index: 2,
+                          imageUrl: '',
+                          bgImageUrl:
+                              'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/d9d4b96415c4c99a2cd17c53e1e15fde_efwks7.jpg',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: _buildEnhancedCard(
+                          index: 3,
+                          imageUrl: '',
+                          bgImageUrl:
+                              'https://res.cloudinary.com/ds1wiqrdb/image/upload/v1766773994/97ce300ef56c4bcee8f351a3a037916f_bbqex9.jpg',
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -184,12 +204,12 @@ class _DesktopHeroSectionState extends State<DesktopHeroSection>
     );
   }
 
-  Widget _buildMainBanner() {
+  Widget _buildMainBanner({required double height}) {
     return Stack(
       children: [
         CarouselSlider(
           options: CarouselOptions(
-            height: 400,
+            height: height,
             viewportFraction: 1.0,
             autoPlay: true,
             autoPlayInterval: const Duration(seconds: 5),
