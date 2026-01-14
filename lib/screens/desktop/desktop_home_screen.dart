@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 import '../../widgets/desktop/desktop_header.dart';
 import '../../widgets/desktop/desktop_hero_section.dart';
 import '../../widgets/desktop/desktop_flash_sale_section.dart';
@@ -31,91 +30,72 @@ class DesktopHomeScreen extends StatefulWidget {
 }
 
 class _DesktopHomeScreenState extends State<DesktopHomeScreen> {
-  late ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: WebSmoothScroll(
-        controller: _scrollController,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              // 1. Header (Full Width)
-              const DesktopHeader(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // 1. Header (Full Width)
+            const DesktopHeader(),
 
-              // 2. Hero Section (Full Width)
-              const DesktopHeroSection(),
+            // 2. Hero Section (Full Width)
+            const DesktopHeroSection(),
 
-              // 2.5 Categories Section
-              const DesktopCategoriesSection(),
+            // 2.5 Categories Section
+            const DesktopCategoriesSection(),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              // Other Sections
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  children: [
-                    const DesktopFlashSaleSection(),
-                    const SizedBox(height: 30),
-                    const DesktopNewArrivalsSection(),
-                    const SizedBox(height: 30),
-                    const DesktopBestSellersSection(),
-                    const SizedBox(height: 30),
-                    const DesktopMarqueeSection(),
-                    const SizedBox(height: 30),
-                    const DesktopTrendingNowSection(),
-                    const SizedBox(height: 10), // Reduced gap
-                    const DesktopExclusiveOffersSection(),
-                    const SizedBox(height: 30),
-                    const DesktopShopByOccasionSection(),
-                    const SizedBox(height: 30),
-                    const DesktopDealsOfTheDaySection(),
-                    const SizedBox(height: 30),
-                    const DesktopPerfectMatchSection(),
-                    const SizedBox(height: 30),
-                    const DesktopLuxurySection(),
-                    const SizedBox(height: 30),
-                    const DesktopWatchShopSection(),
-                    const SizedBox(height: 30),
-                    const DesktopBlogSection(),
-                    const SizedBox(height: 30),
-                    const DesktopInstaFamilySection(),
-                    const SizedBox(height: 30),
-                    DesktopAllProductsSection(),
-                    const SizedBox(height: 30),
-                    const DesktopWatchAndShopSection(),
-                    const SizedBox(height: 30),
-                    const DesktopOurFeaturesSection(),
-                    const SizedBox(height: 30),
-                    const DesktopTempleJewellerySection(),
-                    const SizedBox(height: 30),
-                    const DesktopCelebrityStyleSection(),
-                    const SizedBox(height: 30),
-                    const DesktopFooterSection(),
-                  ],
-                ),
+            // Other Sections
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  const DesktopFlashSaleSection(),
+                  const SizedBox(height: 30),
+                  const DesktopNewArrivalsSection(),
+                  const SizedBox(height: 30),
+                  const DesktopBestSellersSection(),
+                  const SizedBox(height: 30),
+                  const DesktopMarqueeSection(),
+                  const SizedBox(height: 30),
+                  const DesktopTrendingNowSection(),
+                  const SizedBox(height: 10), // Reduced gap
+                  const DesktopExclusiveOffersSection(),
+                  const SizedBox(height: 30),
+                  const DesktopShopByOccasionSection(),
+                  const SizedBox(height: 30),
+                  const DesktopDealsOfTheDaySection(),
+                  const SizedBox(height: 30),
+                  const DesktopPerfectMatchSection(),
+                  const SizedBox(height: 30),
+                  const DesktopLuxurySection(),
+                  const SizedBox(height: 30),
+                  const DesktopWatchShopSection(),
+                  const SizedBox(height: 30),
+                  const DesktopBlogSection(),
+                  const SizedBox(height: 30),
+                  const DesktopInstaFamilySection(),
+                  const SizedBox(height: 30),
+                  DesktopAllProductsSection(),
+                  const SizedBox(height: 30),
+                  const DesktopWatchAndShopSection(),
+                  const SizedBox(height: 30),
+                  const DesktopOurFeaturesSection(),
+                  const SizedBox(height: 30),
+                  const DesktopTempleJewellerySection(),
+                  const SizedBox(height: 30),
+                  const DesktopCelebrityStyleSection(),
+                  const SizedBox(height: 30),
+                  const DesktopFooterSection(),
+                ],
               ),
+            ),
 
-              const SizedBox(height: 50),
-            ],
-          ),
+            const SizedBox(height: 50),
+          ],
         ),
       ),
     );
